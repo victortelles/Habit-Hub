@@ -158,3 +158,27 @@ app.*.symbols
 .python-version
 .gclient_previous_custom_vars
 .gclient_previous_sync_commits
+
+
+# Archivos de Firebase
+google-services.json
+GoogleService-Info.plist
+
+# Archivos de análisis e informes
+*.log
+.logs/
+reports/
+
+# Archivo de configuración de Mason
+mason-lock.json
+.mason/
+
+# Archivos de generación de código
+*.freezed.dart
+*.g.dart
+*.config.dart
+*.mocks.dart
+
+# Archivos de ambiente
+.env
+.env.*
