@@ -18,6 +18,13 @@ class _HomeScreenState extends State<HomeScreen> {
   };
 
   bool isDarkMode = false;
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +59,39 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: 16),
                 _buildChallenges(context),
                 SizedBox(height: 16),
-                _buildHabitsList(context),
+                Text("Tus hábitos", style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold)),
+                Expanded(child: _buildHabitsList(context)),
               ],
             ),
           ),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Inicio",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.group),
+              label: "Comunidad",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.explore),
+              label: "Explorar",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.emoji_events),
+              label: "Actividad",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: "Mi perfil",
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.blue.shade900,
+          unselectedItemColor: Colors.grey,
+          onTap: _onItemTapped,
         ),
       ),
     );
@@ -162,27 +198,23 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHabitsList(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Tus hábitos", style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold)),
-        ...habitStatus.keys.map((habit) => GestureDetector(
-              onTap: () {
-                setState(() {
-                  habitStatus[habit] = !habitStatus[habit]!;
-                });
-              },
-              child: Card(
-                child: ListTile(
-                  title: Text(habit),
-                  leading: Icon(
-                    Icons.check_circle,
-                    color: habitStatus[habit]! ? Colors.blue.shade900 : Colors.grey,
-                  ),
+    return ListView(
+      children: habitStatus.keys.map((habit) => GestureDetector(
+            onTap: () {
+              setState(() {
+                habitStatus[habit] = !habitStatus[habit]!;
+              });
+            },
+            child: Card(
+              child: ListTile(
+                title: Text(habit),
+                leading: Icon(
+                  Icons.check_circle,
+                  color: habitStatus[habit]! ? Colors.blue.shade900 : Colors.grey,
                 ),
               ),
-            )),
-      ],
+            ),
+          )).toList(),
     );
   }
 }
