@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: 16),
                 _buildProgressCard(context),
                 SizedBox(height: 16),
-                _buildChallenges(context),
+                _buildComunity(context),
                 SizedBox(height: 16),
                 Text("Tus hábitos", style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold)),
                 Expanded(child: _buildHabitsList(context)),
@@ -121,27 +121,27 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildDateSelector() {
-    DateTime today = DateTime.now();
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: List.generate(7, (index) {
-        DateTime date = today.add(Duration(days: index));
-        return Column(
-          children: [
-            Text(DateFormat('E').format(date)),
-            CircleAvatar(
-              radius: 16,
-              backgroundColor: index == 0 ? Colors.blue.shade900 : Colors.white,
-              child: Text(
-                "${date.day}",
-                style: TextStyle(color: index == 0 ? Colors.white : Colors.black),
-              ),
-            )
-          ],
-        );
-      }),
-    );
-  }
+  DateTime today = DateTime.now();
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: List.generate(7, (index) {
+      DateTime date = today.subtract(Duration(days: today.weekday - 1)).add(Duration(days: index));
+      return Column(
+        children: [
+          Text(DateFormat('E').format(date)),
+          CircleAvatar(
+            radius: 16,
+            backgroundColor: index == today.weekday - 1 ? Colors.blue.shade900 : Colors.white,
+            child: Text(
+              "${date.day}",
+              style: TextStyle(color: index == today.weekday - 1 ? Colors.white : Colors.black),
+            ),
+          )
+        ],
+      );
+    }),
+  );
+}
 
   Widget _buildProgressCard(BuildContext context) {
     int completedHabits = habitStatus.values.where((status) => status).length;
@@ -180,10 +180,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildChallenges(BuildContext context) {
+  Widget _buildComunity(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print("Desafío presionado");
+        print("Comunidad presionada");
       },
       child: Card(
         color: Colors.blue.shade900,
