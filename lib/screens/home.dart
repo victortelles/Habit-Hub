@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'community.dart';
+import '../widgets/nav_bar.dart'; // Importar el archivo con el BottomNavBar
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -21,78 +23,66 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CommunityScreen(
+            habitStatus: habitStatus,
+            isDarkMode: isDarkMode,
+          ),
+        ),
+      );
+    } else {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
-      home: Scaffold(
+    return Scaffold(
+      backgroundColor: isDarkMode ? Colors.black : Colors.grey[200],
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text("Habit Hub"),
+        titleTextStyle: TextStyle(color: isDarkMode ? Colors.white : Colors.black, fontSize: 20),
+        actions: [
+          IconButton(
+            icon: Icon(isDarkMode ? Icons.wb_sunny : Icons.nightlight_round, color: Colors.white),
+            onPressed: () {
+              setState(() {
+                isDarkMode = !isDarkMode;
+              });
+            },
+          )
+        ],
         backgroundColor: isDarkMode ? Colors.black : Colors.grey[200],
-        appBar: AppBar(
-          title: Text("Habit Hub"),
-          actions: [
-            IconButton(
-              icon: Icon(isDarkMode ? Icons.wb_sunny : Icons.nightlight_round),
-              onPressed: () {
-                setState(() {
-                  isDarkMode = !isDarkMode;
-                });
-              },
-            )
-          ],
-        ),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildHeader(),
-                SizedBox(height: 16),
-                _buildDateSelector(),
-                SizedBox(height: 16),
-                _buildProgressCard(context),
-                SizedBox(height: 16),
-                _buildComunity(context),
-                SizedBox(height: 16),
-                Text("Tus hábitos", style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold)),
-                Expanded(child: _buildHabitsList(context)),
-              ],
-            ),
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(),
+              SizedBox(height: 16),
+              _buildDateSelector(),
+              SizedBox(height: 16),
+              _buildProgressCard(context),
+              SizedBox(height: 16),
+              _buildCommunity(context),
+              SizedBox(height: 16),
+              Text("Tus hábitos", style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold, color: isDarkMode ? Colors.white : Colors.black)),
+              Expanded(child: _buildHabitsList(context)),
+            ],
           ),
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: "Inicio",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.group),
-              label: "Comunidad",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.explore),
-              label: "Explorar",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.emoji_events),
-              label: "Actividad",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: "Mi perfil",
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.blue.shade900,
-          unselectedItemColor: Colors.grey,
-          onTap: _onItemTapped,
-        ),
+      ),
+      bottomNavigationBar: BottomNavBar(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
       ),
     );
   }
@@ -109,6 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: GoogleFonts.poppins(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
+                color: isDarkMode ? Colors.white : Colors.black,
               ),
             ),
             Text("Listo para empezar tu día",
@@ -128,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
       DateTime date = today.subtract(Duration(days: today.weekday - 1)).add(Duration(days: index));
       return Column(
         children: [
-          Text(DateFormat('E').format(date)),
+          Text(DateFormat('E').format(date), style: TextStyle(color: isDarkMode ? Colors.white : Colors.black)),
           CircleAvatar(
             radius: 16,
             backgroundColor: index == today.weekday - 1 ? Colors.blue.shade900 : Colors.white,
@@ -180,22 +171,31 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildComunity(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        print("Comunidad presionada");
-      },
-      child: Card(
-        color: Colors.blue.shade900,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: ListTile(
-          title: Text("Comunidad 👥", style: TextStyle(color: Colors.white)),
-          subtitle: Text("Entérate de los hábitos de tus amigos", style: TextStyle(color: Colors.white70)),
-          trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
+  Widget _buildCommunity(BuildContext context) {
+  return GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CommunityScreen(
+            habitStatus: habitStatus,
+            isDarkMode: isDarkMode,
+          ),
         ),
+      );
+    },
+    child: Card(
+      color: Colors.blue.shade900,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: ListTile(
+        title: Text("Comunidad 👥", style: TextStyle(color: Colors.white)),
+        subtitle: Text("Entérate de los hábitos de tus amigos", style: TextStyle(color: Colors.white70)),
+        trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _buildHabitsList(BuildContext context) {
     return ListView(
@@ -206,8 +206,9 @@ class _HomeScreenState extends State<HomeScreen> {
               });
             },
             child: Card(
+              color: isDarkMode ? Colors.grey.shade800 : Colors.grey.shade300,
               child: ListTile(
-                title: Text(habit),
+                title: Text(habit), textColor: isDarkMode ? Colors.white : Colors.black,
                 leading: Icon(
                   Icons.check_circle,
                   color: habitStatus[habit]! ? Colors.blue.shade900 : Colors.grey,
