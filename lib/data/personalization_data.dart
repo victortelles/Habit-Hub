@@ -9,7 +9,7 @@ class PersonalizationData {
   ];
 
   // Hábitos
-  static const List<Map<String, dynamic>> habitsOptions = [
+  static const List<Map<String, dynamic>> habitOptions = [
     {'name': 'Tomar agua', 'icon': Icons.water_drop, 'value': 'water'},
     {'name': 'Leer', 'icon': Icons.book, 'value': 'read'},
     {'name': 'Meditar', 'icon': Icons.self_improvement, 'value': 'meditation'},
