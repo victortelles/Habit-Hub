@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'community.dart';
-import '../widgets/nav_bar.dart'; // Importar el archivo con el BottomNavBar
+import 'profile.dart';
+import '../widgets/nav_bar.dart';
+import '../providers/app_state.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -10,27 +13,23 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Map<String, bool> habitStatus = {
-    "Tu agua del día": false,
-    "Meditación": false,
-    "Regar tus plantas": false,
-    "Lectura diaria": false,
-    "Tender la cama": false,
-    "Pasear al perro": false
-  };
-
-  bool isDarkMode = false;
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
+    var appState = Provider.of<AppState>(context, listen: false);
+
     if (index == 1) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CommunityScreen(
-            habitStatus: habitStatus,
-            isDarkMode: isDarkMode,
-          ),
+          builder: (context) => CommunityScreen(),
+        ),
+      );
+    } else if (index == 4) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProfileScreen(),
         ),
       );
     } else {
@@ -42,23 +41,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var appState = Provider.of<AppState>(context);
+
     return Scaffold(
-      backgroundColor: isDarkMode ? Colors.black : Colors.grey[200],
+      backgroundColor: appState.isDarkMode ? Colors.black : Colors.grey[200],
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text("Habit Hub"),
-        titleTextStyle: TextStyle(color: isDarkMode ? Colors.white : Colors.black, fontSize: 20),
+        titleTextStyle: TextStyle(color: appState.isDarkMode ? Colors.white : Colors.black, fontSize: 20),
         actions: [
           IconButton(
-            icon: Icon(isDarkMode ? Icons.wb_sunny : Icons.nightlight_round, color: Colors.white),
+            icon: Icon(appState.isDarkMode ? Icons.wb_sunny: Icons.nightlight_round, color: Colors.blue.shade900),
             onPressed: () {
-              setState(() {
-                isDarkMode = !isDarkMode;
-              });
+              appState.toggleDarkMode();
             },
           )
         ],
-        backgroundColor: isDarkMode ? Colors.black : Colors.grey[200],
+        backgroundColor: appState.isDarkMode ? Colors.black : Colors.grey[200],
       ),
       body: SafeArea(
         child: Padding(
@@ -66,16 +65,16 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHeader(),
+              _buildHeader(appState),
               SizedBox(height: 16),
-              _buildDateSelector(),
+              _buildDateSelector(appState),
               SizedBox(height: 16),
-              _buildProgressCard(context),
+              _buildProgressCard(appState),
               SizedBox(height: 16),
-              _buildCommunity(context),
+              _buildCommunity(appState),
               SizedBox(height: 16),
-              Text("Tus hábitos", style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold, color: isDarkMode ? Colors.white : Colors.black)),
-              Expanded(child: _buildHabitsList(context)),
+              Text("Tus hábitos", style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold, color: appState.isDarkMode ? Colors.white : Colors.black)),
+              Expanded(child: _buildHabitsList(appState)),
             ],
           ),
         ),
@@ -87,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(AppState appState) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -99,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: GoogleFonts.poppins(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: isDarkMode ? Colors.white : Colors.black,
+                color: appState.isDarkMode ? Colors.white : Colors.black,
               ),
             ),
             Text("Listo para empezar tu día",
@@ -111,32 +110,32 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildDateSelector() {
-  DateTime today = DateTime.now();
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: List.generate(7, (index) {
-      DateTime date = today.subtract(Duration(days: today.weekday - 1)).add(Duration(days: index));
-      return Column(
-        children: [
-          Text(DateFormat('E').format(date), style: TextStyle(color: isDarkMode ? Colors.white : Colors.black)),
-          CircleAvatar(
-            radius: 16,
-            backgroundColor: index == today.weekday - 1 ? Colors.blue.shade900 : Colors.white,
-            child: Text(
-              "${date.day}",
-              style: TextStyle(color: index == today.weekday - 1 ? Colors.white : Colors.black),
-            ),
-          )
-        ],
-      );
-    }),
-  );
-}
+  Widget _buildDateSelector(AppState appState) {
+    DateTime today = DateTime.now();
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: List.generate(7, (index) {
+        DateTime date = today.subtract(Duration(days: today.weekday - 1)).add(Duration(days: index));
+        return Column(
+          children: [
+            Text(DateFormat('E').format(date), style: TextStyle(color: appState.isDarkMode ? Colors.white : Colors.black)),
+            CircleAvatar(
+              radius: 16,
+              backgroundColor: index == today.weekday - 1 ? Colors.blue.shade900 : Colors.white,
+              child: Text(
+                "${date.day}",
+                style: TextStyle(color: index == today.weekday - 1 ? Colors.white : Colors.black),
+              ),
+            )
+          ],
+        );
+      }),
+    );
+  }
 
-  Widget _buildProgressCard(BuildContext context) {
-    int completedHabits = habitStatus.values.where((status) => status).length;
-    int totalHabits = habitStatus.length;
+  Widget _buildProgressCard(AppState appState) {
+    int completedHabits = appState.habitStatus.values.where((status) => status).length;
+    int totalHabits = appState.habitStatus.length;
     double progress = totalHabits > 0 ? completedHabits / totalHabits : 0;
     Color cardColor = progress == 1.0 ? Colors.green : Colors.blue.shade900;
 
@@ -171,51 +170,47 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildCommunity(BuildContext context) {
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CommunityScreen(
-            habitStatus: habitStatus,
-            isDarkMode: isDarkMode,
+  Widget _buildCommunity(AppState appState) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CommunityScreen(),
+          ),
+        );
+      },
+      child: Card(
+        color: Colors.blue.shade900,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: ListTile(
+          title: Text("Comunidad 👥", style: TextStyle(color: Colors.white)),
+          subtitle: Text("Entérate de los hábitos de tus amigos", style: TextStyle(color: Colors.white70)),
+          trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHabitsList(AppState appState) {
+    return ListView(
+      children: appState.habitStatus.keys.map((habit) => GestureDetector(
+        onTap: () {
+          // Cambia el estado del hábito (de true a false o viceversa)
+          appState.updateHabit(habit, !appState.habitStatus[habit]!);
+        },
+        child: Card(
+          color: appState.isDarkMode ? Colors.grey.shade800 : Colors.grey.shade300,
+          child: ListTile(
+            title: Text(habit),
+            textColor: appState.isDarkMode ? Colors.white : Colors.black,
+            leading: Icon(
+              Icons.check_circle,
+              color: appState.habitStatus[habit]! ? Colors.blue.shade900 : Colors.grey,
+            ),
           ),
         ),
-      );
-    },
-    child: Card(
-      color: Colors.blue.shade900,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: ListTile(
-        title: Text("Comunidad 👥", style: TextStyle(color: Colors.white)),
-        subtitle: Text("Entérate de los hábitos de tus amigos", style: TextStyle(color: Colors.white70)),
-        trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
-      ),
-    ),
-  );
-}
-
-
-  Widget _buildHabitsList(BuildContext context) {
-    return ListView(
-      children: habitStatus.keys.map((habit) => GestureDetector(
-            onTap: () {
-              setState(() {
-                habitStatus[habit] = !habitStatus[habit]!;
-              });
-            },
-            child: Card(
-              color: isDarkMode ? Colors.grey.shade800 : Colors.grey.shade300,
-              child: ListTile(
-                title: Text(habit), textColor: isDarkMode ? Colors.white : Colors.black,
-                leading: Icon(
-                  Icons.check_circle,
-                  color: habitStatus[habit]! ? Colors.blue.shade900 : Colors.grey,
-                ),
-              ),
-            ),
-          )).toList(),
+      )).toList(),
     );
   }
 }

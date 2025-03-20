@@ -1,9 +1,15 @@
-// main.dart
 import 'package:flutter/material.dart';
-import './screens/home.dart'; // Asegúrate de que la ruta sea correcta
+import 'package:provider/provider.dart';
+import './screens/home.dart';
+import './providers/app_state.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => AppState(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -11,15 +17,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Plantilla App Movil',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 95, 163, 236),
-        ),
-        useMaterial3: true,
+    return ChangeNotifierProvider(
+      create: (context) => AppState(),
+      child: MaterialApp(
+        title: 'Habit Hub',
+        debugShowCheckedModeBanner: false,
+        home: HomeScreen(),
       ),
-      home: HomeScreen(), // Aquí se está utilizando MyHomePage desde home.dart
     );
   }
 }
