@@ -7,18 +7,19 @@ class OptionCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const OptionCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.icon,
     required this.isSelected,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: onTap,
         child: Container(
+          // Decoracion del contenedor.
           decoration: BoxDecoration(
               color: isSelected
                   ? Theme.of(context).primaryColor.withOpacity(0.2)
@@ -31,6 +32,7 @@ class OptionCard extends StatelessWidget {
                 width: 2,
               ),
 
+              //Sombreado
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.2),
@@ -68,10 +70,9 @@ class OptionCard extends StatelessWidget {
                   ),
                 ),
 
+                //Si esta seleccionado, bordearle el color
                 if (isSelected)
-
                   Container(
-
                     margin: const EdgeInsets.only(top: 8),
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
 
