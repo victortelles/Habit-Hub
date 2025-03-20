@@ -38,6 +38,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  void _showAlert(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Funcionalidad pendiente"),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Cerrar"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var appState = Provider.of<AppState>(context);
@@ -83,7 +103,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: TextStyle(color: appState.isDarkMode ? Colors.white : Colors.black)),
               trailing: Icon(Icons.arrow_forward_ios, color: appState.isDarkMode ? Colors.white70 : Colors.black54),
               onTap: () {
-                // Acción para abrir configuración
+                _showAlert("Puchurraste en configuración");
               },
             ),
             Divider(color: appState.isDarkMode ? Colors.white24 : Colors.black12),
@@ -91,7 +111,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               leading: Icon(Icons.exit_to_app, color: Colors.red),
               title: Text("Cerrar sesión", style: TextStyle(color: Colors.red)),
               onTap: () {
-                // Acción para cerrar sesión
+                _showAlert("Puchurraste en cerrar sesión");
               },
             ),
           ],
