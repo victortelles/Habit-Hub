@@ -196,7 +196,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return ListView(
       children: appState.habitStatus.keys.map((habit) => GestureDetector(
         onTap: () {
-          // Cambia el estado del hábito (de true a false o viceversa)
           appState.updateHabit(habit, !appState.habitStatus[habit]!);
         },
         child: Card(
