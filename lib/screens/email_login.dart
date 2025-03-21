@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:habit_hub/models/user_preferences.dart';
+import 'package:habit_hub/screens/gender_selection.dart';
 
 class EmailLogin extends StatefulWidget {
   const EmailLogin({super.key});
@@ -101,7 +103,16 @@ class _EmailLoginState extends State<EmailLogin> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blueAccent
                         ), 
-                        onPressed:(){},
+                        //Redireccion a la personalizacion
+                        onPressed:(){
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => GenderSelection(
+                                userPreferences: UserPreferences(),
+                              ),
+                            ),
+                          );
+                        },
                          child: Text(
                           "Siguiente",
                           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
