@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import '../widgets/nav_bar.dart';
-import './home.dart';
-import './community.dart';
 import 'package:provider/provider.dart';
 import '../providers/app_state.dart';
+
+import 'package:habit_hub/screens/activity.dart';
+import 'package:habit_hub/screens/home.dart';
+import 'package:habit_hub/screens/community.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -31,6 +34,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
           builder: (context) => CommunityScreen(),
         ),
       );
+    } else if (index == 2) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Pantalla pendiente'),
+            content: Text('Puchurraste explorar'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } else if (index == 3) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ActivityScreen(),
+        ),
+      );
     } else {
       setState(() {
         _selectedIndex = index;
@@ -43,11 +71,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Funcionalidad pendiente"),
+          title: Text('Funcionalidad pendiente'),
           content: Text(message),
           actions: <Widget>[
             TextButton(
-              child: Text("Cerrar"),
+              child: Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
