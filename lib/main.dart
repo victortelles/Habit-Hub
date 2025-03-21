@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:habit_hub/models/user_preferences.dart';
-import 'screens/gender_selection.dart';
 import 'package:habit_hub/screens/login_options.dart';
 import 'package:provider/provider.dart';
-import './screens/home.dart';
+//import './screens/home.dart';
 import './providers/app_state.dart';
 
 void main() {
@@ -25,7 +23,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Habit Hub',
         debugShowCheckedModeBanner: false,
-        home: HomeScreen(),
+        home: LoginOptions(),
       ),
     );
   }
