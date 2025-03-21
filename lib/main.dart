@@ -1,43 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:habit_hub/models/user_preferences.dart';
+import 'screens/gender_selection.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Plantilla App Movil',
+      title: 'Habit Hub',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 95, 163, 236)),
-        useMaterial3: true,
+        primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text("Plantilla"),
-      ),
-
-      //Añadir el contenido
-      body: Column(
-        children: [
-
-        ],
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Habit Hub'),
+          backgroundColor: Colors.blueAccent,
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold
+          ),
+        ),
+        body: GenderSelection(
+          userPreferences: UserPreferences(),
+        ),
       ),
     );
   }
