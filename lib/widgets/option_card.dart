@@ -16,18 +16,26 @@ class OptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    //Color principal
+    final Color primaryColor = const Color(0xFF3942FF);
+
     return GestureDetector(
         onTap: onTap,
-        child: Container(
-          // Decoracion del contenedor.
+        child: AnimatedContainer(
+          //Animacion y duracion
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+
+          // Decoracion del contenedor animado.
           decoration: BoxDecoration(
               color: isSelected
-                  ? Theme.of(context).primaryColor.withOpacity(0.2)
+                  ? primaryColor.withOpacity(0.2)
                   : Colors.white,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: isSelected
-                    ? Theme.of(context).primaryColor
+                    ? primaryColor
                     : Colors.grey.shade300,
                 width: 2,
               ),
@@ -35,8 +43,10 @@ class OptionCard extends StatelessWidget {
               //Sombreado
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 1,
+                  color: isSelected
+                      ? primaryColor.withOpacity(0.2)
+                      : Colors.grey.withOpacity(0.2),
+                  spreadRadius: isSelected ? 2 : 1,
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -48,22 +58,28 @@ class OptionCard extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-
-                Icon(
-                  icon,
-                  color: isSelected
-                      ? Theme.of(context).primaryColor
-                      : Colors.grey.shade600,
+                AnimatedScale(
+                  duration: const Duration(milliseconds: 300),
+                  scale: isSelected ? 1.1 : 1.0,
+                  child: Icon(
+                    icon,
+                    color: isSelected
+                        ? Theme.of(context).primaryColor
+                        : Colors.grey.shade600,
+                    size: 28,
+                  ),
                 ),
 
+                //Espaciado
                 const SizedBox(height: 12),
 
+                //Texto
                 Text(
                   title,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: isSelected
-                        ? Theme.of(context).primaryColor
+                        ? primaryColor
                         : Colors.black,
                     fontWeight:
                         isSelected ? FontWeight.bold : FontWeight.normal,
@@ -71,21 +87,27 @@ class OptionCard extends StatelessWidget {
                 ),
 
                 //Si esta seleccionado, bordearle el color
-                if (isSelected)
-                  Container(
+                AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    height: isSelected ? 30 : 0,
                     margin: const EdgeInsets.only(top: 8),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isSelected ? 12: 0,
+                      vertical: isSelected ? 4 : 0
+                    ),
 
                     decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
+                      color: primaryColor,
                       borderRadius: BorderRadius.circular(12),
                     ),
 
-                    child: const Icon(
-                      Icons.check,
-                      color: Colors.white,
-                      size: 16,
-                    ),
+                    child: isSelected
+                      ? const Icon(
+                        Icons.check,
+                        color: Colors.white,
+                        size: 16,
+                      )
+                    : const SizedBox(),
                   ),
               ],
             ),

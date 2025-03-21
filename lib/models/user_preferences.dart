@@ -1,17 +1,20 @@
 class UserPreferences {
   String? gender;
-  List<String> selectedHabits = [];
-  List<String> selectedExercises = [];
-  List<String> selectedSports = [];
-  List<String> selectedDays = [];
+  List<String> selectedHabits;
+  List<String> selectedExercises;
+  List<String> selectedSports;
+  List<String> selectedDays;
 
   UserPreferences({
     this.gender,
-    this.selectedHabits = const [],
-    this.selectedExercises = const [],
-    this.selectedSports = const [],
-    this.selectedDays = const [],
-  });
+    List<String>? selectedHabits,
+    List<String>? selectedExercises,
+    List<String>? selectedSports,
+    List<String>? selectedDays,
+  }): selectedHabits = selectedHabits ?? [],
+      selectedExercises = selectedExercises ?? [],
+      selectedSports = selectedSports ?? [],
+      selectedDays = selectedDays ?? [];
 
   Map<String, dynamic> toJson() {
     return {

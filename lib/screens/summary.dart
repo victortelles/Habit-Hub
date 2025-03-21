@@ -36,6 +36,8 @@ class Summary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //Color primario boton
+    final Color primaryColor = const Color(0xFF3942FF);
     final habitNames = _getSelectedNames(userPreferences.selectedHabits, PersonalizationData.habitOptions);
     final exerciseNames = _getSelectedNames(userPreferences.selectedExercises, PersonalizationData.exerciseOptions);
     final sportNames = _getSelectedNames(userPreferences.selectedSports, PersonalizationData.sportOptions);
@@ -45,8 +47,8 @@ class Summary extends StatelessWidget {
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.transparent,
-        title: const Text('Resumen', style: TextStyle(color: Colors.black)),
+        backgroundColor: const Color(0xFF2196F3),
+        title: const Text('Resumen', style: TextStyle(color: Colors.white)),
         centerTitle: true,
       ),
 
@@ -90,30 +92,35 @@ class Summary extends StatelessWidget {
                       'Género',
                       [_getGenderName()],
                       Icons.person,
+                      primaryColor,
                     ),
                     _buildSummaryCard(
                       context,
                       'Hábitos',
                       habitNames,
                       Icons.checklist,
+                      primaryColor,
                     ),
                     _buildSummaryCard(
                       context,
                       'Ejercicios',
                       exerciseNames,
                       Icons.fitness_center,
+                      primaryColor,
                     ),
                     _buildSummaryCard(
                       context,
                       'Deportes',
                       sportNames,
                       Icons.sports,
+                      primaryColor,
                     ),
                     _buildSummaryCard(
                       context,
                       'Días preferidos',
                       dayNames,
                       Icons.calendar_today,
+                      primaryColor,
                     ),
                   ],
                 ),
@@ -139,12 +146,19 @@ class Summary extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryColor,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(24),
                     ),
                   ),
-                  child: const Text('Comenzar'),
+                  child: Text(
+                    'Comenzar',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -159,6 +173,7 @@ class Summary extends StatelessWidget {
     String title,
     List<String> items,
     IconData icon,
+    Color primaryColor,
   ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -180,7 +195,7 @@ class Summary extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, color: Theme.of(context).primaryColor),
+              Icon(icon, color: primaryColor),
               const SizedBox(width: 8),
               Text(
                 title,

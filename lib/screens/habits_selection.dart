@@ -22,21 +22,26 @@ class _HabitsSelectionState extends State<HabitsSelection> {
   @override
   void initState() {
     super.initState();
+    //Crear una copia para evitar problemas de referencia
     _userPreferences = widget.userPreferences;
+
   }
 
   void _onHabitSelected(String habit) {
     setState(() {
       if (_userPreferences.selectedHabits.contains(habit)) {
         _userPreferences.selectedHabits.remove(habit);
+        print(_userPreferences.selectedHabits);
       } else {
         _userPreferences.selectedHabits.add(habit);
+        print(_userPreferences.selectedHabits);
       }
     });
   }
 
   void _navigateToNext() {
-    Navigator.of(context).push (
+    //Pasar la referencia actualizada a la siguiente pantalla
+    Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => ExcercisesSelection(
           userPreferences: _userPreferences,
@@ -54,6 +59,8 @@ class _HabitsSelectionState extends State<HabitsSelection> {
       selectedValues: _userPreferences.selectedHabits,
       onOptionSelected: _onHabitSelected,
       onNext: _navigateToNext,
+      maxSelections: 0,
+      showSelection: true,
     );
   }
 }

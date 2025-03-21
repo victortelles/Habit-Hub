@@ -25,25 +25,29 @@ class PersonalizationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //Color principal
+    final Color primaryColor = const Color(0xFF3942FF);
+
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.transparent,
-        title: Text(title, style: const TextStyle(color: Colors.black)),
+        backgroundColor: const Color(0xFF2196F3),
+        title: Text(title, style: const TextStyle(color: Colors.white)),
         centerTitle: true,
       ),
+
       //Espaciado
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
 
-          //
+          //Column
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              //
+              //Texto de instruccion
               Text(
                 instructionText,
                 style: const TextStyle(
@@ -68,7 +72,7 @@ class PersonalizationPage extends StatelessWidget {
               //Espaciado
               const SizedBox(height: 16),
 
-              //
+              //Lista gridview
               Expanded(
                 child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -87,6 +91,7 @@ class PersonalizationPage extends StatelessWidget {
                       icon: option['icon'],
                       isSelected: isSelected,
                       onTap: () {
+                        //Verificar limite de Selecciones
                         if (maxSelections > 0 && selectedValues.length >= maxSelections && !isSelected) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -107,6 +112,7 @@ class PersonalizationPage extends StatelessWidget {
               const SizedBox(height: 16),
 
               if (showSelection)
+                //Contenedor
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -115,6 +121,7 @@ class PersonalizationPage extends StatelessWidget {
                     border: Border.all(color: Colors.grey.shade300),
                   ),
 
+                  //Columna Seleccionados
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -137,7 +144,9 @@ class PersonalizationPage extends StatelessWidget {
                           return Chip(
                             label: Text(option['name']),
                             onDeleted: () => onOptionSelected(value),
-                            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                            backgroundColor: primaryColor.withOpacity(0.1),
+                            deleteIconColor: primaryColor,
+                            labelStyle: TextStyle(color: primaryColor),
                           );
                         }).toList(),
                       ),
@@ -148,17 +157,25 @@ class PersonalizationPage extends StatelessWidget {
               //Espaciado
               const SizedBox(height: 16),
 
+              //boton inferior
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: selectedValues.isNotEmpty ? onNext : null,
                   style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryColor,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(24),
                     ),
                   ),
-                  child: const Text('Siguiente'),
+                  child: Text(
+                    'Siguiente',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
             ],
