@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:habit_hub/models/user_preferences.dart';
+import 'screens/gender_selection.dart';
 import 'package:habit_hub/screens/login_options.dart';
 import 'package:provider/provider.dart';
 import './screens/home.dart';
