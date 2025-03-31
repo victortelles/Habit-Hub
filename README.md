@@ -89,6 +89,11 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
+## Compatibilidad Java-Graddle
+
+- Java 17 es compatible con Gradle 7.3
+- Java 23 es compatible con Gradle 8.10
+
 ## Comandos para implementar el log-in
 
 1. flutter configure 
