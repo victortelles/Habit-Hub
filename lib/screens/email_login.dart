@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:habit_hub/models/user_preferences.dart';
 import 'package:habit_hub/screens/gender_selection.dart';
 
+import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+
 class EmailLogin extends StatefulWidget {
   const EmailLogin({super.key});
 
@@ -10,120 +13,89 @@ class EmailLogin extends StatefulWidget {
 }
 
 class _EmailLoginState extends State<EmailLogin> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _dobController = TextEditingController();
+
+  Future<void> _register() async {
+    try {
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+      
+      await userCredential.user?.updateDisplayName(_nameController.text.trim());
+      
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => GenderSelection(
+            userPreferences: UserPreferences(),
+          ),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: ${e.toString()}")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Crea tu cuenta", style: TextStyle( fontWeight: FontWeight.bold),),
+        title: const Text(
+          "Crea tu cuenta",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       backgroundColor: const Color.fromARGB(255, 227, 234, 238),
-      body:  Column(
+      body: Column(
         children: [
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20.0,8,0,5),
-                child: Text("Nombre", style: TextStyle( fontWeight: FontWeight.bold),),
-              )
-            ],
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20,0,20,20),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      suffixIcon: Icon(Icons.clear),
-                      hintText: "Nombre"
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20.0,8,0,5),
-                child: Text("Correo Electrónico", style: TextStyle( fontWeight: FontWeight.bold),),
-              )
-            ],
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20,0,20,20),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      suffixIcon: Icon(Icons.clear),
-                      hintText: "E-mail"
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20.0,8,0,5),
-                child: Text("Fecha de nacimiento", style: TextStyle( fontWeight: FontWeight.bold),),
-              )
-            ],
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20,0,20,20),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      suffixIcon: Icon(Icons.clear),
-                      hintText: "mm/dd/yyyy"
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-          SizedBox(
-            height: 410,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: SizedBox(
-                    height: 50,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blueAccent
-                        ), 
-                        //Redireccion a la personalizacion
-                        onPressed:(){
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => GenderSelection(
-                                userPreferences: UserPreferences(),
-                              ),
-                            ),
-                          );
-                        },
-                         child: Text(
-                          "Siguiente",
-                          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-                        )
-                    )
-                  ),
-                )
-              )
-            ],
-          )
+          _buildTextField("Nombre", _nameController),
+          _buildTextField("Correo Electrónico", _emailController),
+          _buildTextField("Contraseña", _passwordController, obscureText: true),
+          _buildTextField("Fecha de nacimiento", _dobController),
+          const SizedBox(height: 20),
+          _buildRegisterButton()
         ],
+      ),
+    );
+  }
+
+  Widget _buildTextField(String label, TextEditingController controller, {bool obscureText = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: TextField(
+        controller: controller,
+        obscureText: obscureText,
+        decoration: InputDecoration(
+          labelText: label,
+          suffixIcon: IconButton(
+            icon: const Icon(Icons.clear),
+            onPressed: () => controller.clear(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRegisterButton() {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: SizedBox(
+        width: double.infinity,
+        height: 50,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
+          onPressed: _register,
+          child: const Text(
+            "Siguiente",
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          ),
+        ),
       ),
     );
   }
