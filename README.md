@@ -88,3 +88,12 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## Comandos para implementar el log-in
+
+1. flutter configure 
+  - Asegúrate de seleccionar el habit-hub
+  - Selecciona android y ios
+2. flutter pub add firebase_core
+3. flutter pub add firebase_auth
+4. flutter pub add firebase_ui_auth

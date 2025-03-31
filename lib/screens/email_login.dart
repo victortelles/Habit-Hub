@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:habit_hub/models/user_preferences.dart';
 import 'package:habit_hub/screens/gender_selection.dart';
 
+import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+
+
 class EmailLogin extends StatefulWidget {
   const EmailLogin({super.key});
 
