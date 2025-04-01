@@ -8,8 +8,10 @@ class PersonalizationPage extends StatelessWidget {
   final List<String> selectedValues;
   final Function(String) onOptionSelected;
   final VoidCallback onNext;
+  final VoidCallback? onSkip;
   final int maxSelections;
   final bool showSelection;
+  final bool showSkipButton;
 
   const PersonalizationPage({
     super.key,
@@ -19,8 +21,10 @@ class PersonalizationPage extends StatelessWidget {
     required this.selectedValues,
     required this.onOptionSelected,
     required this.onNext,
+    this.onSkip,
     this.maxSelections = 0,
-    this.showSelection = true,
+    this.showSelection = true,  //Contorno de seleccionados
+    this.showSkipButton = true, //Boton de omitir
   });
 
   @override
@@ -35,6 +39,19 @@ class PersonalizationPage extends StatelessWidget {
         backgroundColor: const Color(0xFF2196F3),
         title: Text(title, style: const TextStyle(color: Colors.white)),
         centerTitle: true,
+        actions: [
+          if (showSkipButton && onSkip != null)
+            TextButton(
+              onPressed: onSkip,
+              child: const Text(
+                'Omitir >',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+        ],
       ),
 
       //Espaciado
