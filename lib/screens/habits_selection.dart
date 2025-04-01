@@ -24,7 +24,6 @@ class _HabitsSelectionState extends State<HabitsSelection> {
     super.initState();
     //Crear una copia para evitar problemas de referencia
     _userPreferences = widget.userPreferences;
-
   }
 
   void _onHabitSelected(String habit) {
@@ -50,6 +49,12 @@ class _HabitsSelectionState extends State<HabitsSelection> {
     );
   }
 
+  //Funcionalidad para saltar la seleccion de habitos.
+  void _skipSelection() {
+    _navigateToNext();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return PersonalizationPage(
@@ -61,6 +66,7 @@ class _HabitsSelectionState extends State<HabitsSelection> {
       onNext: _navigateToNext,
       maxSelections: 0,
       showSelection: true,
+      onSkip: _skipSelection,
     );
   }
 }

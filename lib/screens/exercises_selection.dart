@@ -45,6 +45,10 @@ class _ExcercisesSelectionState extends State<ExcercisesSelection> {
     );
   }
 
+  //Funcionalidad para saltar la seleccion de habitos.
+  void _skipSelection() {
+    _navigateToNext();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +59,7 @@ class _ExcercisesSelectionState extends State<ExcercisesSelection> {
       selectedValues: _userPreferences.selectedExercises,
       onOptionSelected: _onExerciseSelected,
       onNext: _navigateToNext,
+      onSkip: _skipSelection,
     );
   }
 }

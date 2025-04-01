@@ -45,6 +45,11 @@ class _DaysSelectionState extends State<DaysSelection> {
     );
   }
 
+  //Funcionalidad para saltar la seleccion de habitos.
+  void _skipSelection() {
+    _navigateToNext();
+  }
+
   @override
   Widget build(BuildContext context) {
     return PersonalizationPage(
@@ -54,6 +59,7 @@ class _DaysSelectionState extends State<DaysSelection> {
       selectedValues: _userPreferences.selectedDays,
       onOptionSelected: _onDaySelected,
       onNext: _navigateToNext,
+      onSkip: _skipSelection,
     );
   }
 }
