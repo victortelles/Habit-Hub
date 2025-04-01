@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit_hub/screens/home.dart';
 import '../data/personalization_data.dart';
 import '../models/user_preferences.dart';
 
@@ -134,14 +135,10 @@ class Summary extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Aquí iría la navegación al home o la lógica para guardar las preferencias
-
-                    // Mostrar un SnackBar
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content:
-                            Text('¡Perfil completado! Redirigiendo al home...'),
-                        duration: Duration(seconds: 2),
+                    // Navegar a HomeScreen en una nueva ventana
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => HomeScreen(),
                       ),
                     );
                   },
