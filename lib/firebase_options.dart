@@ -65,4 +65,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'habit-hub-c4eb4.firebasestorage.app',
     iosBundleId: 'com.example.habitHub',
   );
+
 }
