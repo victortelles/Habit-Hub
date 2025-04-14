@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:habit_hub/screens/register.dart';
-import 'package:habit_hub/screens/login.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:habit_hub/services/firebase.dart';
-import 'package:provider/provider.dart';
+//Provider
 import '../providers/app_state.dart';
+import 'package:provider/provider.dart';
+//Servicios
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:habit_hub/services/firebase.dart';
 import '../services/firestore.dart';
+//Modelos
 import '../models/user.dart';
+//Widgets
 import 'package:habit_hub/widgets/animated_logo.dart';
+//Ventanas
+import 'package:habit_hub/screens/login.dart';
+import 'package:habit_hub/screens/register.dart';
 
 
 class LoginOptions extends StatefulWidget {

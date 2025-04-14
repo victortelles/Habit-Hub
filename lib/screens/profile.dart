@@ -1,15 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:habit_hub/screens/login_options.dart';
-import '../widgets/nav_bar.dart';
-import 'package:provider/provider.dart';
+
+//Providers
 import '../providers/app_state.dart';
+import 'package:provider/provider.dart';
+
+//Widgets
+import '../widgets/nav_bar.dart';
+
+//Ventanas
+import 'package:habit_hub/screens/login_options.dart';
 import 'package:habit_hub/screens/activity.dart';
 import 'package:habit_hub/screens/home.dart';
 import 'package:habit_hub/screens/community.dart';
 import 'package:habit_hub/widgets/profile_personalization.dart';
-
 import 'package:habit_hub/screens/habits_detail.dart';
 import 'package:habit_hub/screens/days_detail.dart';
 import 'package:habit_hub/screens/exercises_detail.dart';
