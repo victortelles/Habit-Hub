@@ -152,47 +152,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
 //            SizedBox(height: 30),
             SizedBox(height: 16),
 
-            //Sección 2: Personalización (Mini-cards horizontales)
+            //Sección 2: Personalización
             Text("Personalización",
                 style: GoogleFonts.poppins(
                     fontSize: 18, fontWeight: FontWeight.w600)),
             const SizedBox(height: 10),
-            Wrap(
-              alignment: WrapAlignment.start,
-              spacing: 0,
-              runSpacing: 0,
-              children: [
+            SizedBox(
+              height: 300,
+              child: GridView.count(
+                crossAxisCount: 3,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
+                childAspectRatio: 1,
+                physics: const BouncingScrollPhysics(),
+                children: [
 
-                // Card de Habitos
-                MiniCard(
-                  title: "Tus Hábitos",
-                  icon: Icons.self_improvement,
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => HabitsDetail()));
-                  },
-                ),
+                  // Card de Habitos
+                  MiniCard(
+                    title: "Tus Hábitos",
+                    icon: Icons.self_improvement,
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => HabitsDetail()));
+                    },
+                  ),
 
-                // Card de Ejercicios
-                MiniCard(
-                  title: "Tus Ejercicios",
-                  icon: Icons.fitness_center,
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => ExercisesDetail()));
-                  },
-                ),
+                  // Card de Ejercicios
+                  MiniCard(
+                    title: "Tus Ejercicios",
+                    icon: Icons.fitness_center,
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => ExercisesDetail()));
+                    },
+                  ),
 
-                // Card de Dias
-                MiniCard(
-                  title: "Tus Días",
-                  icon: Icons.calendar_today,
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => DaysDetail()));
-                  },
-                ),
-              ],
+                  // Card de Dias
+                  MiniCard(
+                    title: "Tus Días",
+                    icon: Icons.calendar_today,
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => DaysDetail()));
+                    },
+                  ),
+                ],
+              ),
             ),
 
             Spacer(),
