@@ -67,8 +67,7 @@ class _LoginOptionsState extends State<LoginOptions> {
       }
 
       // Obtener detalles de autenticación de la solicitud
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
       // Crear una nueva credencial
       final credential = GoogleAuthProvider.credential(
@@ -94,8 +93,7 @@ class _LoginOptionsState extends State<LoginOptions> {
             createdAt: DateTime.now(),
           );
 
-          await Provider.of<AppState>(context, listen: false)
-              .saveUserToFirestore(newUser);
+          await Provider.of<AppState>(context, listen: false).saveUserToFirestore(newUser);
 
           // Navegar al flujo de personalización
           Navigator.of(context).pushReplacementNamed('/gender_selection');
