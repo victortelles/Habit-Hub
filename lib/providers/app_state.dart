@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/user.dart';
@@ -77,7 +78,7 @@ class AppState with ChangeNotifier {
     notifyListeners();
   }
 
-  // Métodos de autenticación
+  // Métodos de autenticación (Cerrar sesion)
   Future<void> signOut() async {
     await _auth.signOut();
     _userProfile = null;
@@ -122,6 +123,32 @@ class AppState with ChangeNotifier {
     } catch (e) {
       print('Error updating user preferences: $e');
       throw e;
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  //Metodo para elimianr cuenta
+  Future<void> deleteUserAccount() async {
+    if (_currentUser == null) throw Exception("No hay usuario autenticado.");
+
+    setLoading(true);
+
+    try {
+      //Eliminar usuario en DB (Firestore)
+      await FirebaseFirestore.instance.collection('users').doc(_currentUser!.uid).delete();
+
+      //Eliminar cuenta en Auth (Firebase)
+      await _currentUser!.delete();
+
+      //Limpiar estado
+      _userProfile = null;
+      _currentUser = null;
+
+      notifyListeners();
+
+    } catch (error) {
+      throw Exception("Error al eliminar la cuenta ${error.toString()}");
     } finally {
       setLoading(false);
     }

@@ -253,12 +253,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // Botón eliminar cuenta
             ListTile(
               leading: Icon(Icons.delete_forever, color: Colors.red),
-              title:
-                  Text("Eliminar cuenta", style: TextStyle(color: Colors.red)),
+              title: Text("Eliminar cuenta", style: TextStyle(color: Colors.red)),
               onTap: () {
-                TextEditingController confirmationController =
-                    TextEditingController();
+                TextEditingController confirmationController = TextEditingController();
 
+                //Mostrar mensaje de confirmacion
                 showDialog(
                   context: context,
                   builder: (_) => AlertDialog(
@@ -270,32 +269,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         TextField(controller: confirmationController),
                       ],
                     ),
+                    //Acciones
                     actions: [
+
+                      //Cancelar
                       TextButton(
                           onPressed: () => Navigator.pop(context),
                           child: Text("Cancelar")),
+
+                      //Aceptar
                       TextButton(
                         onPressed: () async {
-                          if (confirmationController.text
-                                  .trim()
-                                  .toLowerCase() ==
-                              "estoy de acuerdo") {
+                          //Texto de confirmacion
+                          if (confirmationController.text.trim().toLowerCase() =="estoy de acuerdo") {
                             try {
-                              await FirebaseAuth.instance.currentUser?.delete();
+                              //Funcionalidad de eliminar usuario
+                              await Provider.of<AppState>(context, listen: false).deleteUserAccount();
                               Navigator.pushAndRemoveUntil(
                                 context,
-                                MaterialPageRoute(
-                                    builder: (_) => LoginOptions()),
+                                MaterialPageRoute(builder: (_) => LoginOptions()),
                                 (_) => false,
                               );
-                            } catch (e) {
+                            } catch (error) {
                               Navigator.pop(context);
-                              _showAlert(
-                                  "Error al eliminar cuenta: ${e.toString()}");
+                              _showAlert("Error al eliminar cuenta: ${error.toString()}");
                             }
                           } else {
-                            _showAlert(
-                                "Debes escribir exactamente: estoy de acuerdo");
+                            _showAlert("Debes escribir exactamente: estoy de acuerdo");
                           }
                         },
                         child: Text("Eliminar",
