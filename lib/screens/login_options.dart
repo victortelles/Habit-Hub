@@ -1,15 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-//Provider
-import '../providers/app_state.dart';
-import 'package:provider/provider.dart';
-//Servicios
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:habit_hub/services/firebase.dart';
-import '../services/firestore.dart';
-//Modelos
-import '../models/user.dart';
+import 'package:habit_hub/services/auth.dart';
 //Widgets
 import 'package:habit_hub/widgets/animated_logo.dart';
 //Ventanas
@@ -25,94 +16,24 @@ class LoginOptions extends StatefulWidget {
 }
 
 class _LoginOptionsState extends State<LoginOptions> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final FirestoreService _firestoreService = FirestoreService();
+  //Inicializar servicio de auth
+  final AuthService _authService = AuthService();
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
     // Verificar si ya hay un usuario autenticado
-    _checkCurrentUser();
+    _authService.checkCurrentUser(context);
   }
 
-  void _checkCurrentUser() async {
-    User? user = _auth.currentUser;
-    if (user != null) {
-      // Si hay un usuario autenticado, verificar si existe en Firestore
-      final userExists = await _firestoreService.getUserById(user.uid);
-      if (userExists != null) {
-        // Si existe en Firestore, navegar a la pantalla principal
-        Navigator.of(context).pushReplacementNamed('/home');
-      }
-    }
-  }
-
-  Future<void> _signInWithGoogle() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      // Iniciar el proceso de inicio de sesión con Google
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-
-      if (googleUser == null) {
-        // El usuario canceló el inicio de sesión
-        setState(() {
-          _isLoading = false;
-        });
-        return;
-      }
-
-      // Obtener detalles de autenticación de la solicitud
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-      // Crear una nueva credencial
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      // Una vez que tenemos la credencial, podemos iniciar sesión con Firebase
-      final userCredential = await _auth.signInWithCredential(credential);
-      final user = userCredential.user;
-
-      if (user != null) {
-        // Verificar si el usuario ya existe en Firestore
-        final existingUser = await _firestoreService.getUserById(user.uid);
-
-        if (existingUser == null) {
-          // Si no existe, crear un nuevo registro en Firestore
-          final newUser = UserModel(
-            uid: user.uid,
-            email: user.email ?? '',
-            name: user.displayName ?? 'Usuario',
-            profilePic: user.photoURL,
-            createdAt: DateTime.now(),
-          );
-
-          await Provider.of<AppState>(context, listen: false).saveUserToFirestore(newUser);
-
-          // Navegar al flujo de personalización
-          Navigator.of(context).pushReplacementNamed('/gender_selection');
-        } else {
-          // Si ya existe, ir directamente a la pantalla principal
-          Navigator.of(context).pushReplacementNamed('/home');
-        }
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content:
-                Text("Error al iniciar sesión con Google: ${e.toString()}")),
-      );
-    } finally {
+  //Llamada al servicio de Auth (AuthGoogle)
+  void _signInWithGoogle() {
+    _authService.signInWithGoogle(context, (loading){
       setState(() {
-        _isLoading = false;
+        _isLoading = loading;
       });
-    }
+    });
   }
 
   void _goToEmailLogin() {
@@ -152,6 +73,7 @@ class _LoginOptionsState extends State<LoginOptions> {
                     //Contenido
                     Row(
                       children: [
+                        //Titulo
                         Padding(
                           padding: const EdgeInsets.fromLTRB(25.0, 0, 0, 0),
                           child: Text("Es tu momento.",
@@ -163,6 +85,8 @@ class _LoginOptionsState extends State<LoginOptions> {
                         ),
                       ],
                     ),
+
+                    //Descripcion
                     Row(
                       children: [
                         Padding(
@@ -194,6 +118,8 @@ class _LoginOptionsState extends State<LoginOptions> {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
+
+                              //Iniciar sesion
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -213,7 +139,8 @@ class _LoginOptionsState extends State<LoginOptions> {
                         ],
                       ),
                     ),
-                    // Botón para registrarse con email
+
+                    // Botón para registrarse
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20.0, 0, 20.0, 8.0),
                       child: Row(
@@ -250,6 +177,7 @@ class _LoginOptionsState extends State<LoginOptions> {
 //                              );
 //                            },
 //                          ),
+                        //Boton de google
                         SocialButton(
                           icon: "google",
                           onPressed: _signInWithGoogle,
@@ -268,6 +196,7 @@ class _LoginOptionsState extends State<LoginOptions> {
 //                          ),
                       ],
                     ),
+                    //Terminos y condiciones
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
