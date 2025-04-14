@@ -1,13 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:habit_hub/screens/login_options.dart';
 import '../widgets/nav_bar.dart';
 import 'package:provider/provider.dart';
 import '../providers/app_state.dart';
-
 import 'package:habit_hub/screens/activity.dart';
 import 'package:habit_hub/screens/home.dart';
 import 'package:habit_hub/screens/community.dart';
+import 'package:habit_hub/widgets/profile_personalization.dart';
+
+import 'package:habit_hub/screens/habits_detail.dart';
+import 'package:habit_hub/screens/days_detail.dart';
+import 'package:habit_hub/screens/exercises_detail.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -88,8 +93,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
     var appState = Provider.of<AppState>(context);
 
+    //Titulo Superior
     return Scaffold(
       backgroundColor: appState.isDarkMode ? Colors.black : Colors.grey[200],
       appBar: AppBar(
@@ -101,45 +108,197 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         backgroundColor: appState.isDarkMode ? Colors.grey[900] : Colors.white,
       ),
+
+      //Body
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CircleAvatar(radius: 50),
+            // Sección 1: Perfil
+            //Circulo para avatar
+            Center(
+                child: CircleAvatar(
+              radius: 50,
+              backgroundImage:
+                  user?.photoURL != null ? NetworkImage(user!.photoURL!) : null,
+              child:
+                  user?.photoURL == null ? Icon(Icons.person, size: 50) : null,
+            )),
+
+            // Apartado del nombre
             SizedBox(height: 16),
-            Text(
-              "Nombre de Usuario",
+            Center(
+                child: Text(
+              user?.displayName ?? 'Nombre no disponible',
               style: GoogleFonts.poppins(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: appState.isDarkMode ? Colors.white : Colors.black,
               ),
-            ),
+            )),
+
+            //Apartado del correo
             SizedBox(height: 8),
-            Text(
-              "correo@ejemplo.com",
+            Center(
+                child: Text(
+              user?.email ?? 'Correo no disponible',
               style: TextStyle(
                 fontSize: 16,
                 color: appState.isDarkMode ? Colors.white70 : Colors.black54,
               ),
+            )),
+
+//            SizedBox(height: 30),
+            SizedBox(height: 16),
+
+            //Sección 2: Personalización (Mini-cards horizontales)
+            Text("Personalización",
+                style: GoogleFonts.poppins(
+                    fontSize: 18, fontWeight: FontWeight.w600)),
+            const SizedBox(height: 10),
+            Wrap(
+              alignment: WrapAlignment.start,
+              spacing: 0,
+              runSpacing: 0,
+              children: [
+
+                // Card de Habitos
+                MiniCard(
+                  title: "Tus Hábitos",
+                  icon: Icons.self_improvement,
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => HabitsDetail()));
+                  },
+                ),
+
+                // Card de Ejercicios
+                MiniCard(
+                  title: "Tus Ejercicios",
+                  icon: Icons.fitness_center,
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => ExercisesDetail()));
+                  },
+                ),
+
+                // Card de Dias
+                MiniCard(
+                  title: "Tus Días",
+                  icon: Icons.calendar_today,
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => DaysDetail()));
+                  },
+                ),
+              ],
             ),
-            SizedBox(height: 20),
+
+            Spacer(),
+
+            //Sección 3: Opciones
             ListTile(
-              leading: Icon(Icons.settings, color: appState.isDarkMode ? Colors.white : Colors.black),
+              leading: Icon(Icons.settings,
+                  color: appState.isDarkMode ? Colors.white : Colors.black),
               title: Text("Configuración",
-                  style: TextStyle(color: appState.isDarkMode ? Colors.white : Colors.black)),
-              trailing: Icon(Icons.arrow_forward_ios, color: appState.isDarkMode ? Colors.white70 : Colors.black54),
-              onTap: () {
-                _showAlert("Puchurraste en configuración");
-              },
+                  style: TextStyle(
+                      color:
+                          appState.isDarkMode ? Colors.white : Colors.black)),
+              trailing: Icon(Icons.arrow_forward_ios,
+                  color: appState.isDarkMode ? Colors.white70 : Colors.black54),
+              onTap: () => _showAlert("Puchurraste en configuración"),
             ),
-            Divider(color: appState.isDarkMode ? Colors.white24 : Colors.black12),
+            Divider(
+                color: appState.isDarkMode ? Colors.white24 : Colors.black12),
+
+            // Botón cerrar sesión
             ListTile(
               leading: Icon(Icons.exit_to_app, color: Colors.red),
               title: Text("Cerrar sesión", style: TextStyle(color: Colors.red)),
               onTap: () {
-                _showAlert("Puchurraste en cerrar sesión");
+                showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: Text('Confirmar cierre de sesión'),
+                    content: Text('¿Estás seguro de que deseas cerrar sesión?'),
+                    actions: [
+                      TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text('Cancelar')),
+                      TextButton(
+                        onPressed: () async {
+                          Navigator.pop(context);
+                          await FirebaseAuth.instance.signOut();
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (_) => LoginOptions()),
+                            (_) => false,
+                          );
+                        },
+                        child: Text('Cerrar sesión',
+                            style: TextStyle(color: Colors.red)),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+
+            // Botón eliminar cuenta
+            ListTile(
+              leading: Icon(Icons.delete_forever, color: Colors.red),
+              title:
+                  Text("Eliminar cuenta", style: TextStyle(color: Colors.red)),
+              onTap: () {
+                TextEditingController confirmationController =
+                    TextEditingController();
+
+                showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: Text('Eliminar cuenta'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("Escribe 'estoy de acuerdo' para confirmar."),
+                        TextField(controller: confirmationController),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text("Cancelar")),
+                      TextButton(
+                        onPressed: () async {
+                          if (confirmationController.text
+                                  .trim()
+                                  .toLowerCase() ==
+                              "estoy de acuerdo") {
+                            try {
+                              await FirebaseAuth.instance.currentUser?.delete();
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => LoginOptions()),
+                                (_) => false,
+                              );
+                            } catch (e) {
+                              Navigator.pop(context);
+                              _showAlert(
+                                  "Error al eliminar cuenta: ${e.toString()}");
+                            }
+                          } else {
+                            _showAlert(
+                                "Debes escribir exactamente: estoy de acuerdo");
+                          }
+                        },
+                        child: Text("Eliminar",
+                            style: TextStyle(color: Colors.red)),
+                      ),
+                    ],
+                  ),
+                );
               },
             ),
           ],

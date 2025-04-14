@@ -17,10 +17,9 @@ class MiniCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 100,
-        height: 100,
+        constraints: const BoxConstraints(minWidth: 80, maxWidth:110),
         margin: const EdgeInsets.all(8),
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -28,15 +27,31 @@ class MiniCard extends StatelessWidget {
             BoxShadow(color: Colors.black12, blurRadius: 4),
           ],
         ),
+
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 28),
-            const SizedBox(height: 6),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 12),
+
+            // Contenedor para icono
+            Container(
+              alignment: Alignment.center,
+              child: Icon(icon, size: 28),
+            ),
+
+            const SizedBox(height: 10),
+
+            //Contenedor para texto
+            Container(
+              alignment: Alignment.center,
+              width: double.infinity,
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 12),
+                softWrap: true,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),
