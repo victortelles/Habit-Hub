@@ -9,6 +9,8 @@ import 'package:provider/provider.dart';
 import '../providers/app_state.dart';
 import '../services/firestore.dart';
 import '../models/user.dart';
+import 'package:habit_hub/widgets/animated_logo.dart';
+
 
 class LoginOptions extends StatefulWidget {
   const LoginOptions({super.key});
@@ -60,7 +62,8 @@ class _LoginOptionsState extends State<LoginOptions> {
       }
 
       // Obtener detalles de autenticación de la solicitud
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       // Crear una nueva credencial
       final credential = GoogleAuthProvider.credential(
@@ -86,7 +89,8 @@ class _LoginOptionsState extends State<LoginOptions> {
             createdAt: DateTime.now(),
           );
 
-          await Provider.of<AppState>(context, listen: false).saveUserToFirestore(newUser);
+          await Provider.of<AppState>(context, listen: false)
+              .saveUserToFirestore(newUser);
 
           // Navegar al flujo de personalización
           Navigator.of(context).pushReplacementNamed('/gender_selection');
@@ -97,7 +101,9 @@ class _LoginOptionsState extends State<LoginOptions> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error al iniciar sesión con Google: ${e.toString()}")),
+        SnackBar(
+            content:
+                Text("Error al iniciar sesión con Google: ${e.toString()}")),
       );
     } finally {
       setState(() {
@@ -126,108 +132,109 @@ class _LoginOptionsState extends State<LoginOptions> {
       backgroundColor: Colors.blueAccent,
       body: _isLoading
           ? Center(child: CircularProgressIndicator(color: Colors.white))
-          : Builder(
-              builder: (context) {
-                return Center(
-                  child: Column(
-                    children: [
-                      SizedBox(height: 500),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(25.0, 0, 0, 0),
-                            child: Text(
-                              "Es tu momento.",
+          : Builder(builder: (context) {
+              return Center(
+                child: Column(
+                  children: [
+
+                    //Logo animado
+                    const AnimatedLogo(
+                      imagePath: 'assets/images/splash/logo.png',
+                      size: 350,
+                    ),
+
+                    //Espaciado
+                    SizedBox(height: 50),
+
+                    //Contenido
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(25.0, 0, 0, 0),
+                          child: Text("Es tu momento.",
                               style: GoogleFonts.archivo(
-                                textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold
-                                )
-                              )
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(25.8, 0, 0, 0),
-                          ),
-                          Text(
+                                  textStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold))),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(25.8, 0, 0, 0),
+                        ),
+                        Text(
                             "Encuentra amigos y comparte tus metas con\n ellos",
                             style: GoogleFonts.archivo(
-                              textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15
-                              )
-                            )
-                          )
+                                textStyle: TextStyle(
+                                    color: Colors.white, fontSize: 15)))
+                      ],
+                    ),
+                    SizedBox(height: 50),
+                    // Botón para iniciar sesión con email
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 8, 20.0, 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                              child: SizedBox(
+                            height: 50,
+                            child: ElevatedButton(
+                              onPressed:
+                                  _goToLoginScreen, // Usar la nueva pantalla de login
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child:
+                                        Icon(Icons.email, color: Colors.black),
+                                  ),
+                                  Text(
+                                    "Iniciar Sesion",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ))
                         ],
                       ),
-                      SizedBox(height: 50),
-                      // Botón para iniciar sesión con email
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20.0, 8, 20.0, 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: SizedBox(
-                                height: 50,
-                                child: ElevatedButton(
-                                  onPressed: _goToLoginScreen, // Usar la nueva pantalla de login
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Icon(Icons.email, color: Colors.black),
-                                      ),
-                                      Text(
-                                        "Iniciar Sesion",
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            )
-                          ],
-                        ),
-                      ),
-                      // Botón para registrarse con email
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20.0, 0, 20.0, 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: SizedBox(
-                                height: 50,
-                                child: TextButton(
-                                  onPressed: _goToEmailLogin,
-                                  child: Text(
-                                    "¿No tienes cuenta? Regístrate",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              )
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      // Botones de redes sociales
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    ),
+                    // Botón para registrarse con email
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 0, 20.0, 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          Expanded(
+                              child: SizedBox(
+                            height: 50,
+                            child: TextButton(
+                              onPressed: _goToEmailLogin,
+                              child: Text(
+                                "¿No tienes cuenta? Regístrate",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ))
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    // Botones de redes sociales
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
 //Boton para iniciar con Apple
 //                          SocialButton(
 //                            icon: "apple",
@@ -240,10 +247,10 @@ class _LoginOptionsState extends State<LoginOptions> {
 //                              );
 //                            },
 //                          ),
-                          SocialButton(
-                            icon: "google",
-                            onPressed: _signInWithGoogle,
-                          ),
+                        SocialButton(
+                          icon: "google",
+                          onPressed: _signInWithGoogle,
+                        ),
 //Boton para iniciar sesion con facbook
 //                          SocialButton(
 //                            icon: "facebook",
@@ -256,21 +263,20 @@ class _LoginOptionsState extends State<LoginOptions> {
 //                              );
 //                            },
 //                          ),
-                        ],
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        "Al continuar aceptas nuestros términos de uso y política de privacidad",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white70, fontSize: 12),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          "Al continuar aceptas nuestros términos de uso y política de privacidad",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.white70, fontSize: 12),
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              }
-            ),
+                    )
+                  ],
+                ),
+              );
+            }),
     );
   }
 }
@@ -289,7 +295,7 @@ class SocialButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     IconData iconData;
-    
+
     switch (icon) {
 //      case "apple":
 //        iconData = Icons.apple;
@@ -298,12 +304,12 @@ class SocialButton extends StatelessWidget {
         iconData = Icons.g_mobiledata;
         break;
       case "facebook":
- //       iconData = Icons.facebook;
- //       break;
+      //       iconData = Icons.facebook;
+      //       break;
       default:
         iconData = Icons.login;
     }
-    
+
     return SizedBox(
       width: 60,
       height: 60,

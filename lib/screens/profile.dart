@@ -287,19 +287,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               await Provider.of<AppState>(context, listen: false).deleteUserAccount();
                               Navigator.pushAndRemoveUntil(
                                 context,
-                                MaterialPageRoute(builder: (_) => LoginOptions()),
+                                MaterialPageRoute(builder: (_) => LoginOptions()),  //redirecciona a login
                                 (_) => false,
                               );
                             } catch (error) {
-                              Navigator.pop(context);
+                              Navigator.pop(context); //Cerrar dialogo
                               _showAlert("Error al eliminar cuenta: ${error.toString()}");
                             }
                           } else {
                             _showAlert("Debes escribir exactamente: estoy de acuerdo");
                           }
                         },
-                        child: Text("Eliminar",
-                            style: TextStyle(color: Colors.red)),
+                        child: Text("Eliminar",style: TextStyle(color: Colors.red)),
                       ),
                     ],
                   ),
