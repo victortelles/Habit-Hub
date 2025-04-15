@@ -24,7 +24,8 @@ class AuthService {
   }
 
   // Autenticación con Google
-  Future<void> signInWithGoogle(BuildContext context, Function(bool) onLoading) async {
+  Future<void> signInWithGoogle(
+      BuildContext context, Function(bool) onLoading) async {
     onLoading(true);
     try {
       // Forzar a seleccionar cuenta
@@ -36,7 +37,8 @@ class AuthService {
         return;
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -58,7 +60,8 @@ class AuthService {
             createdAt: DateTime.now(),
           );
 
-          await Provider.of<AppState>(context, listen: false).saveUserToFirestore(newUser);
+          await Provider.of<AppState>(context, listen: false)
+              .saveUserToFirestore(newUser);
           Navigator.of(context).pushReplacementNamed('/gender_selection');
         } else {
           Navigator.of(context).pushReplacementNamed('/home');
@@ -66,10 +69,56 @@ class AuthService {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error al iniciar sesión con Google: ${e.toString()}")),
+        SnackBar(
+            content:
+                Text("Error al iniciar sesión con Google: ${e.toString()}")),
       );
     } finally {
       onLoading(false);
+    }
+  }
+
+  //Apartado de registrar usuario
+  Future<String?> registerWithEmail({
+    required String name,
+    required String email,
+    required String password,
+    required DateTime birthdate,
+    required BuildContext context,
+  }) async {
+    try {
+      final userCredential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      await userCredential.user?.updateDisplayName(name);
+
+      final newUser = UserModel(
+        uid: userCredential.user!.uid,
+        email: email,
+        name: name,
+        birthdate: birthdate,
+        createdAt: DateTime.now(),
+      );
+
+      await Provider.of<AppState>(context, listen: false)
+          .saveUserToFirestore(newUser);
+
+      return null; // sin error
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'email-already-in-use':
+          return 'El correo ya está en uso';
+        case 'invalid-email':
+          return 'Correo no válido';
+        case 'weak-password':
+          return 'La contraseña es muy débil';
+        default:
+          return 'Error: ${e.message}';
+      }
+    } catch (e) {
+      return 'Error inesperado: $e';
     }
   }
 }
