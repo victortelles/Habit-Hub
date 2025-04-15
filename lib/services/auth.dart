@@ -98,9 +98,11 @@ class AuthService {
         email: email,
         name: name,
         birthdate: birthdate,
+        role: 'user',
         createdAt: DateTime.now(),
       );
 
+      //Guardar en Firestore
       await Provider.of<AppState>(context, listen: false)
           .saveUserToFirestore(newUser);
 

@@ -15,6 +15,7 @@ class UserModel {
   final List<String> trainingDays;
   final String? profilePic;
   final DateTime createdAt;
+  final String role;
 
   UserModel({
     required this.uid,
@@ -29,6 +30,7 @@ class UserModel {
     this.exerciseTypes = const [],
     this.trainingDays = const [],
     this.profilePic,
+    this.role = 'user',
     DateTime? createdAt,
   }) : this.createdAt = createdAt ?? DateTime.now();
 
@@ -47,6 +49,7 @@ class UserModel {
       exerciseTypes: List<String>.from(map['excersice_types'] ?? []),
       trainingDays: List<String>.from(map['training_days'] ?? []),
       profilePic: map['profile_pic'],
+      role: map['role'] ?? 'user',
       createdAt: (map['created_at'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
@@ -66,6 +69,7 @@ class UserModel {
       'excersice_types': exerciseTypes,
       'training_days': trainingDays,
       'profile_pic': profilePic,
+      'role': role,
       'created_at': Timestamp.fromDate(createdAt),
     };
   }
@@ -91,6 +95,7 @@ class UserModel {
       exerciseTypes: exerciseTypes ?? this.exerciseTypes,
       trainingDays: trainingDays ?? this.trainingDays,
       profilePic: this.profilePic,
+      role: this.role,
       createdAt: this.createdAt,
     );
   }
