@@ -22,7 +22,7 @@ class _HabitsSelectionState extends State<HabitsSelection> {
   @override
   void initState() {
     super.initState();
-    //Crear una copia para evitar problemas de referencia
+    //Crear una copia para evitar mutaciones no deseadas
     _userPreferences = widget.userPreferences;
   }
 

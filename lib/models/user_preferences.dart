@@ -1,10 +1,12 @@
 class UserPreferences {
   String? gender;
+  //Lista de seleccion usuario
   List<String> selectedHabits;
   List<String> selectedExercises;
   List<String> selectedSports;
   List<String> selectedDays;
 
+  //Constructur con valores defecto si son nulos
   UserPreferences({
     this.gender,
     List<String>? selectedHabits,
@@ -16,6 +18,7 @@ class UserPreferences {
       selectedSports = selectedSports ?? [],
       selectedDays = selectedDays ?? [];
 
+  //Convertir a JSON (para almacenar o enviar)
   Map<String, dynamic> toJson() {
     return {
       'gender': gender,
