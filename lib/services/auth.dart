@@ -3,7 +3,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_hub/models/user.dart';
 import 'package:habit_hub/services/firebase.dart';
-import 'package:habit_hub/services/firestore.dart';
 import 'package:provider/provider.dart';
 import '../providers/app_state.dart';
 

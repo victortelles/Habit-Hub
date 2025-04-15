@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:habit_hub/models/user_preferences.dart';
-//import 'package:habit_hub/models/user.dart';
 import 'package:habit_hub/screens/gender_selection.dart';
 import 'package:habit_hub/services/auth.dart';
-//import 'package:provider/provider.dart';
-//import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
-//import 'package:firebase_ui_auth/firebase_ui_auth.dart';
-//import '../providers/app_state.dart';
 import 'package:habit_hub/widgets/register_forms.dart';
 import 'package:intl/intl.dart';
 
@@ -19,7 +14,6 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-//  final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -44,7 +38,7 @@ class _RegisterState extends State<Register> {
     }
   }
 
-  //Funcionalidad para registrar al usuario.
+  //Notificacion de los campos vacios
   Future<void> _register() async {
     if (_nameController.text.isEmpty ||
         _emailController.text.isEmpty ||
@@ -102,95 +96,6 @@ class _RegisterState extends State<Register> {
     //Navegacion tras el registro exitoso
     Navigator.of(context).push(MaterialPageRoute(
         builder: (_) => GenderSelection(userPreferences: UserPreferences())));
-
-//    try {
-//      // Registrar usuario en Firebase Auth
-//      UserCredential userCredential =
-//          await _auth.createUserWithEmailAndPassword(
-//        email: _emailController.text.trim(),
-//        password: _passwordController.text.trim(),
-//      );
-//
-//      // Actualizar nombre de usuario en Auth
-//      await userCredential.user?.updateDisplayName(_nameController.text.trim());
-//
-//      // Crear modelo de usuario para Firestore
-//      UserModel newUser = UserModel(
-//        uid: userCredential.user!.uid,
-//        email: _emailController.text.trim(),
-//        name: _nameController.text.trim(),
-//        birthdate: _selectedDate,
-//        createdAt: DateTime.now(),
-//      );
-//
-//      // Guardar usuario en Firestore usando el AppState
-//      await Provider.of<AppState>(context, listen: false)
-//          .saveUserToFirestore(newUser);
-//
-//      // Navegar a la siguiente pantalla de personalización
-//      Navigator.of(context).push(
-//        MaterialPageRoute(
-//          builder: (context) => GenderSelection(
-//            userPreferences: UserPreferences(),
-//          ),
-//        ),
-//      );
-//    } catch (e) {
-//      String errorMessage = "Error al registrar";
-//      if (e is FirebaseAuthException) {
-//        switch (e.code) {
-//          case 'email-already-in-use':
-//            errorMessage = "El correo ya está en uso";
-//            break;
-//          case 'invalid-email':
-//            errorMessage = "El formato de correo electrónico no es válido";
-//            break;
-//          case 'weak-password':
-//            errorMessage = "La contraseña es muy débil";
-//            break;
-//          default:
-//            errorMessage = "Error: ${e.message}";
-//        }
-//      }
-//
-//      ScaffoldMessenger.of(context).showSnackBar(
-//        SnackBar(content: Text(errorMessage)),
-//      );
-//    } finally {
-//      setState(() {
-//        _isLoading = false;
-//      });
-//    }
-//  }
-
-//    //Widget Estilo del formulario
-//    Widget _buildTextField(
-//      String label,
-//      TextEditingController controller,
-//      IconData icon, {
-//      bool obscureText = false,
-//      TextInputType keyboardType = TextInputType.text,
-//    }) {
-//      return Container(
-//        decoration: BoxDecoration(
-//          color: Colors.white.withOpacity(0.1),
-//          borderRadius: BorderRadius.circular(8),
-//        ),
-//        child: TextField(
-//          controller: controller,
-//          obscureText: obscureText,
-//          keyboardType: keyboardType,
-//          style: TextStyle(color: Colors.white),
-//          decoration: InputDecoration(
-//            labelText: label,
-//            labelStyle: TextStyle(color: Colors.white70),
-//            prefixIcon: Icon(icon, color: Colors.white70),
-//            border: InputBorder.none,
-//            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-//          ),
-//        ),
-//      );
-//    }
   }
 
   @override
@@ -264,16 +169,7 @@ class _RegisterState extends State<Register> {
               obscureText: true
             ),
 
-//              _buildTextField("Nombre", _nameController, Icons.person),
-//
-//              SizedBox(height: 16),
-//              _buildTextField(
-//                  "Correo electrónico", _emailController, Icons.email),
-//
-//              SizedBox(height: 16),
-//              _buildTextField("Contraseña", _passwordController, Icons.lock,
-//                  obscureText: true),
-
+            //Campo fecha de nacimiento
             const SizedBox(height: 16),
             GestureDetector(
               onTap: () => _selectDate(context),
