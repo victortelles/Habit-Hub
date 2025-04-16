@@ -76,15 +76,9 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text("Habit Hub"),
-        titleTextStyle: TextStyle(color: appState.isDarkMode ? Colors.white : Colors.black, fontSize: 20),
-//        actions: [
-//          IconButton(
-//            icon: Icon(appState.isDarkMode ? Icons.wb_sunny: Icons.nightlight_round, color: Colors.blue.shade900),
-//            onPressed: () {
-//              appState.toggleDarkMode();
-//            },
-//          )
-//        ],
+        titleTextStyle: TextStyle(
+            color: appState.isDarkMode ? Colors.white : Colors.black,
+            fontSize: 20),
         backgroundColor: appState.isDarkMode ? Colors.black : Colors.grey[200],
       ),
       body: SafeArea(
@@ -101,7 +95,12 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 16),
               _buildCommunity(appState),
               SizedBox(height: 16),
-              Text("Tus hábitos", style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold, color: appState.isDarkMode ? Colors.white : Colors.black)),
+              Text("Tus hábitos",
+                  style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color:
+                          appState.isDarkMode ? Colors.white : Colors.black)),
               Expanded(child: _buildHabitsList(appState)),
             ],
           ),
@@ -122,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Hola, Usuario 👋",
+              "Hola, ${appState.userProfile?.name ?? 'Usuario'} 👋",
               style: GoogleFonts.poppins(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -133,36 +132,88 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: GoogleFonts.poppins(color: Colors.grey)),
           ],
         ),
-        Icon(Icons.emoji_emotions_outlined, color: Colors.blue.shade900, size: 30),
+        Icon(Icons.emoji_emotions_outlined,
+            color: Colors.blue.shade900, size: 30),
       ],
     );
   }
 
   Widget _buildDateSelector(AppState appState) {
     DateTime today = DateTime.now();
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: List.generate(7, (index) {
-        DateTime date = today.subtract(Duration(days: today.weekday - 1)).add(Duration(days: index));
-        return Column(
-          children: [
-            Text(DateFormat('E').format(date), style: TextStyle(color: appState.isDarkMode ? Colors.white : Colors.black)),
-            CircleAvatar(
-              radius: 16,
-              backgroundColor: index == today.weekday - 1 ? Colors.blue.shade900 : Colors.white,
-              child: Text(
-                "${date.day}",
-                style: TextStyle(color: index == today.weekday - 1 ? Colors.white : Colors.black),
-              ),
-            )
-          ],
-        );
-      }),
+    DateTime firstDayOfWeek = today.subtract(Duration(days: today.weekday - 1));
+
+    return SizedBox(
+      height: 60,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: 30, // mostrar un rango de 30 dias (1 mes)
+        itemBuilder: (context, index) {
+          DateTime date = firstDayOfWeek.add(Duration(days: index)); // Mostrar el dia actual en el centro
+          bool isToday = date.year == today.year &&
+              date.month == today.month &&
+              date.day == today.day;
+
+          return Container(
+            width: 50,
+            margin: EdgeInsets.symmetric(horizontal: 4),
+            decoration: BoxDecoration(
+              color: isToday
+                  ? Colors.blue.shade900
+                  : (appState.isDarkMode ? Colors.grey.shade800 : Colors.white),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  DateFormat('E').format(date),
+                  style: TextStyle(
+                      color: isToday
+                          ? Colors.white
+                          : (appState.isDarkMode
+                              ? Colors.white
+                              : Colors.black)),
+                ),
+                Text(
+                  "${date.day}",
+                  style: TextStyle(
+                      color: isToday
+                          ? Colors.white
+                          : (appState.isDarkMode
+                              ? Colors.white
+                              : Colors.black)),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
+
+    //return Row(
+    //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //  children: List.generate(7, (index) {
+    //    DateTime date = today.subtract(Duration(days: today.weekday - 1)).add(Duration(days: index));
+    //    return Column(
+    //      children: [
+    //        Text(DateFormat('E').format(date), style: TextStyle(color: appState.isDarkMode ? Colors.white : Colors.black)),
+    //        CircleAvatar(
+    //          radius: 16,
+    //          backgroundColor: index == today.weekday - 1 ? Colors.blue.shade900 : Colors.white,
+    //          child: Text(
+    //            "${date.day}",
+    //            style: TextStyle(color: index == today.weekday - 1 ? Colors.white : Colors.black),
+    //          ),
+    //        )
+    //      ],
+    //    );
+    //  }),
+    //);
   }
 
   Widget _buildProgressCard(AppState appState) {
-    int completedHabits = appState.habitStatus.values.where((status) => status).length;
+    int completedHabits =
+        appState.habitStatus.values.where((status) => status).length;
     int totalHabits = appState.habitStatus.length;
     double progress = totalHabits > 0 ? completedHabits / totalHabits : 0;
     Color cardColor = progress == 1.0 ? Colors.green : Colors.blue.shade900;
@@ -213,7 +264,8 @@ class _HomeScreenState extends State<HomeScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: ListTile(
           title: Text("Comunidad 👥", style: TextStyle(color: Colors.white)),
-          subtitle: Text("Entérate de los hábitos de tus amigos", style: TextStyle(color: Colors.white70)),
+          subtitle: Text("Entérate de los hábitos de tus amigos",
+              style: TextStyle(color: Colors.white70)),
           trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
         ),
       ),
@@ -222,22 +274,29 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildHabitsList(AppState appState) {
     return ListView(
-      children: appState.habitStatus.keys.map((habit) => GestureDetector(
-        onTap: () {
-          appState.updateHabit(habit, !appState.habitStatus[habit]!);
-        },
-        child: Card(
-          color: appState.isDarkMode ? Colors.grey.shade800 : Colors.grey.shade300,
-          child: ListTile(
-            title: Text(habit),
-            textColor: appState.isDarkMode ? Colors.white : Colors.black,
-            leading: Icon(
-              Icons.check_circle,
-              color: appState.habitStatus[habit]! ? Colors.blue.shade900 : Colors.grey,
-            ),
-          ),
-        ),
-      )).toList(),
+      children: appState.habitStatus.keys
+          .map((habit) => GestureDetector(
+                onTap: () {
+                  appState.updateHabit(habit, !appState.habitStatus[habit]!);
+                },
+                child: Card(
+                  color: appState.isDarkMode
+                      ? Colors.grey.shade800
+                      : Colors.grey.shade300,
+                  child: ListTile(
+                    title: Text(habit),
+                    textColor:
+                        appState.isDarkMode ? Colors.white : Colors.black,
+                    leading: Icon(
+                      Icons.check_circle,
+                      color: appState.habitStatus[habit]!
+                          ? Colors.blue.shade900
+                          : Colors.grey,
+                    ),
+                  ),
+                ),
+              ))
+          .toList(),
     );
   }
 }
