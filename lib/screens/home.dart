@@ -114,26 +114,49 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHeader(AppState appState) {
+    //Declarar variable
+    final name = appState.userProfile?.name ?? 'Usuario';
+    final greeting = 'Hola, $name';
+    double rotationAngle = 0;
+
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Hola, ${appState.userProfile?.name ?? 'Usuario'} 👋",
-              style: GoogleFonts.poppins(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: appState.isDarkMode ? Colors.white : Colors.black,
-              ),
-            ),
-            Text("Listo para empezar tu día",
-                style: GoogleFonts.poppins(color: Colors.grey)),
-          ],
+        // Animated Waving Hand Icon
+        TweenAnimationBuilder<double>(
+          tween: Tween<double>(begin: -15, end: 15),
+          duration: const Duration(milliseconds: 300),
+          builder: (context, value, child) {
+            rotationAngle = value;
+            return Transform.rotate(
+              angle: value * (3.141592653589793 / 180),
+              child: Icon(Icons.waving_hand,
+                  color: Colors.blue.shade900, size: 30),
+            );
+          },
         ),
-        Icon(Icons.emoji_emotions_outlined,
-            color: Colors.blue.shade900, size: 30),
+        const SizedBox(width: 8), // Espacio entre el icono y el texto
+
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                greeting,
+                style: GoogleFonts.poppins(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: appState.isDarkMode ? Colors.white : Colors.black,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text("Listo para empezar tu día",
+                  style: GoogleFonts.poppins(color: Colors.grey)),
+            ],
+          ),
+        ),
+//        Icon(Icons.emoji_emotions_outlined,
+//            color: Colors.blue.shade900, size: 30),
       ],
     );
   }
@@ -148,7 +171,8 @@ class _HomeScreenState extends State<HomeScreen> {
         scrollDirection: Axis.horizontal,
         itemCount: 30, // mostrar un rango de 30 dias (1 mes)
         itemBuilder: (context, index) {
-          DateTime date = firstDayOfWeek.add(Duration(days: index)); // Mostrar el dia actual en el centro
+          DateTime date = firstDayOfWeek
+              .add(Duration(days: index)); // Mostrar el dia actual en el centro
           bool isToday = date.year == today.year &&
               date.month == today.month &&
               date.day == today.day;
