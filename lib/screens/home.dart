@@ -114,9 +114,19 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHeader(AppState appState) {
-    //Declarar variable
+    //Obtener nombre y limitarlo
     final name = appState.userProfile?.name ?? 'Usuario';
-    final greeting = 'Hola, $name';
+    final nameParts = name.split(' ');
+    String displayName = 'Usuario';
+
+    //Separar el nombre y solo tomar [NombreP] [NombreSec]
+    if (nameParts == 1) {
+      displayName = nameParts[0];
+    } else {
+      displayName = '${nameParts[0]} ${nameParts[1].substring(0, 1)}.';
+    }
+
+    final greeting = 'Hola, $displayName';
     double rotationAngle = 0;
 
     return Row(
@@ -124,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         // Animated Waving Hand Icon
         TweenAnimationBuilder<double>(
-          tween: Tween<double>(begin: -15, end: 15),
+          tween: Tween<double>(begin: -10, end: 10),
           duration: const Duration(milliseconds: 300),
           builder: (context, value, child) {
             rotationAngle = value;
@@ -155,8 +165,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-//        Icon(Icons.emoji_emotions_outlined,
-//            color: Colors.blue.shade900, size: 30),
       ],
     );
   }
@@ -213,26 +221,6 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
     );
-
-    //return Row(
-    //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //  children: List.generate(7, (index) {
-    //    DateTime date = today.subtract(Duration(days: today.weekday - 1)).add(Duration(days: index));
-    //    return Column(
-    //      children: [
-    //        Text(DateFormat('E').format(date), style: TextStyle(color: appState.isDarkMode ? Colors.white : Colors.black)),
-    //        CircleAvatar(
-    //          radius: 16,
-    //          backgroundColor: index == today.weekday - 1 ? Colors.blue.shade900 : Colors.white,
-    //          child: Text(
-    //            "${date.day}",
-    //            style: TextStyle(color: index == today.weekday - 1 ? Colors.white : Colors.black),
-    //          ),
-    //        )
-    //      ],
-    //    );
-    //  }),
-    //);
   }
 
   Widget _buildProgressCard(AppState appState) {
