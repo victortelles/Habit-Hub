@@ -6,6 +6,12 @@ import 'package:provider/provider.dart';
 import '../widgets/nav_bar.dart';
 import '../providers/app_state.dart';
 
+import '../widgets/home_header.dart';
+import '../widgets/horizontal_date_selector.dart';
+import '../widgets/habits_progress_card.dart';
+import '../widgets/community_card.dart';
+import '../widgets/habits_list.dart';
+
 import 'package:habit_hub/screens/profile.dart';
 import 'package:habit_hub/screens/activity.dart';
 import 'package:habit_hub/screens/community.dart';
