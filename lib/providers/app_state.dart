@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../models/user_preferences.dart';
 import '../models/user.dart';
 import '../services/firebase.dart';
 
@@ -136,7 +137,10 @@ class AppState with ChangeNotifier {
 
     try {
       //Eliminar usuario en DB (Firestore)
-      await FirebaseFirestore.instance.collection('users').doc(_currentUser!.uid).delete();
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_currentUser!.uid)
+          .delete();
 
       //Eliminar cuenta en Auth (Firebase)
       await _currentUser!.delete();
@@ -146,11 +150,62 @@ class AppState with ChangeNotifier {
       _currentUser = null;
 
       notifyListeners();
-
     } catch (error) {
       throw Exception("Error al eliminar la cuenta ${error.toString()}");
     } finally {
       setLoading(false);
+    }
+  }
+
+  //Metodo para Obtener Habitos
+  Future<List<String>> getUserHabits() async {
+    if (_currentUser == null) return [];
+
+    try {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_currentUser!.uid)
+          .get();
+
+      if (userDoc.exists && userDoc.data() != null) {
+        Map<String, dynamic>? data = userDoc.data() as Map<String, dynamic>?;
+        return (data?['habits'] as List<dynamic>?)?.cast<String>() ?? [];
+      }
+      return [];
+    } catch (e) {
+      print("Error obteniendo los habitos del usuario: $e");
+      return [];
+    }
+  }
+
+  //Metodo para Obtener todas las preferencias del usuario
+  Future<UserPreferences> getUserPreferences() async {
+    if (_currentUser == null) return UserPreferences();
+
+    try {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_currentUser!.uid)
+          .get();
+
+      if (userDoc.exists && userDoc.data() != null) {
+        Map<String, dynamic>? data = userDoc.data() as Map<String, dynamic>?;
+        return UserPreferences(
+          gender: data?['gender'] as String?,
+          selectedHabits:
+              (data?['habits'] as List<dynamic>?)?.cast<String>() ?? [],
+          selectedSports:
+              (data?['sports'] as List<dynamic>?)?.cast<String>() ?? [],
+          selectedExercises:
+              (data?['exercise_types'] as List<dynamic>?)?.cast<String>() ?? [],
+          selectedDays:
+              (data?['training_days'] as List<dynamic>?)?.cast<String>() ?? [],
+        );
+      }
+      return UserPreferences(); //Retorna una instancia por defecto si no existe
+    } catch (e) {
+      print("Error al obtener las preferencias del usuario: $e");
+      return UserPreferences(); //Retorna una instancia por defecto en caso de error
     }
   }
 }
