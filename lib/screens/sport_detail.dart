@@ -8,63 +8,61 @@ class SportDetail extends StatefulWidget {
   const SportDetail({Key? key}) : super(key: key);
 
   @override
-  _SportDetailState createState() => _SportDetailState();
+  State<SportDetail> createState() => _SportDetailState();
 }
 
 class _SportDetailState extends State<SportDetail> {
-  List<String> _selectedHabits = [];
+  List<String> _selectedSports = [];
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadUserHabits();
+    _loadUserSports();
   }
 
-  Future<void> _loadUserHabits() async {
+  // Cargar preferencias del usuario
+  Future<void> _loadUserSports() async {
     try {
       final appState = Provider.of<AppState>(context, listen: false);
-      final userPreferences = await appState.getUserHabits();
+      final userPreferences = await appState.getUserPreferences();
       setState(() {
-        _selectedHabits = userPreferences;
+        _selectedSports = userPreferences.selectedSports;
         _isLoading = false;
       });
     } catch (e) {
-      print('Error loading user habits: $e');
-
+      print('Error loading user sports: $e');
       setState(() {
         _isLoading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error al cargar los hábitos: ${e.toString()}")),
+        SnackBar(
+            content: Text("Error al cargar los deportes: ${e.toString()}")),
       );
     }
   }
 
-  void _onHabitSelected(String habit) {
+  // Maneja la selección/deselección de un deporte
+  void _onSportSelected(String sport) {
     setState(() {
-      if (_selectedHabits.contains(habit)) {
-        _selectedHabits.remove(habit);
+      if (_selectedSports.contains(sport)) {
+        _selectedSports.remove(sport);
       } else {
-        _selectedHabits.add(habit);
+        _selectedSports.add(sport);
       }
     });
   }
 
+  // Guardar preferencias del usuario
   Future<void> _savePreferences() async {
     try {
       final appState = Provider.of<AppState>(context, listen: false);
-      // Obtener las preferencias de los usuarios
-      final userPreferences = await appState.getUserPreferences();
-      // Actualizar los habitos seleccionados
-      userPreferences.selectedHabits = _selectedHabits;
-      // Guardar las preferencias seleccionadas
-      await appState.updateUserPreferences(habits: userPreferences.selectedHabits);
+      await appState.updateUserPreferences(sports: _selectedSports);
       Navigator.pop(context);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text("Error al actualizar los hábitos: ${e.toString()}")),
+            content: Text("Error al actualizar los deportes: ${e.toString()}")),
       );
     }
   }
@@ -73,15 +71,15 @@ class _SportDetailState extends State<SportDetail> {
   Widget build(BuildContext context) {
     return _isLoading
         ? Scaffold(
-            appBar: AppBar(title: const Text("Tus Hábitos")),
+            appBar: AppBar(title: const Text("Tus Deportes")),
             body: const Center(child: CircularProgressIndicator()),
           )
         : PersonalizationPage(
-            title: "Tus Hábitos",
-            instructionText: "Selecciona tus hábitos",
-            options: PersonalizationData.habitOptions,
-            selectedValues: _selectedHabits,
-            onOptionSelected: _onHabitSelected,
+            title: "Tus Deportes",
+            instructionText: "Selecciona tus deportes favoritos",
+            options: PersonalizationData.sportOptions,
+            selectedValues: _selectedSports,
+            onOptionSelected: _onSportSelected,
             onNext: _savePreferences,
             maxSelections: 0,
             showSelection: true,
