@@ -60,7 +60,12 @@ class _ExercisesDetailState extends State<ExercisesDetail> {
 
     try {
       final appState = Provider.of<AppState>(context, listen: false);
-      await appState.updateUserPreferences(exerciseTypes: _selectedExercises);
+      //Obtener las preferencias seleccionadas
+      final userPreferences = await appState.getUserPreferences();
+      //Selecciona las preferencias
+      userPreferences.selectedExercises = _selectedExercises;
+      //Las actualiza
+      await appState.updateUserPreferences(exerciseTypes: userPreferences.selectedExercises);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Ejercicios actualizados.")),
       );

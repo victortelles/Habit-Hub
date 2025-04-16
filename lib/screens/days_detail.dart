@@ -12,7 +12,7 @@ class DaysDetail extends StatefulWidget {
 }
 
 class _DaysDetailState extends State<DaysDetail> {
-  late List<String> _selectedDays;
+  late List<String> _selectedDays = [];
   bool _isLoading = true;
 
   @override
@@ -28,8 +28,9 @@ class _DaysDetailState extends State<DaysDetail> {
     try {
       final appState = Provider.of<AppState>(context, listen: false);
       final userPreferences = await appState.getUserPreferences();
+      //userPreferences.trainingDays = _selectedDays;
       setState(() {
-        //_selectedDays = userPreferences?.training_days ?? [];
+        //_selectedDays = userPreferences.trainingDays ?? [];
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -59,15 +60,14 @@ class _DaysDetailState extends State<DaysDetail> {
 
     try {
       final appState = Provider.of<AppState>(context, listen: false);
-      final userPreferences = await appState.getUserPreferences();
-      //userPreferences.training_days = _selectedDays;
 
-      await appState.updateUserPreferences(
-          //trainingDays: userPreferences.training_days,
-          sports: userPreferences.selectedSports,
-          exerciseTypes: userPreferences.selectedExercises,
-          habits: userPreferences.selectedHabits,
-          gender: userPreferences.gender);
+      // Obtener las preferencias de los usuarios
+      final userPreferences = await appState.getUserPreferences();
+      // Actualizar los habitos seleccionados
+      userPreferences.selectedDays = _selectedDays;
+      // Guardar las preferencias seleccionadas
+      await appState.updateUserPreferences(trainingDays: userPreferences.selectedDays);
+
       Navigator.pop(context);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

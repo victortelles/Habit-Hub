@@ -197,7 +197,7 @@ class AppState with ChangeNotifier {
           selectedSports:
               (data?['sports'] as List<dynamic>?)?.cast<String>() ?? [],
           selectedExercises:
-              (data?['exercise_types'] as List<dynamic>?)?.cast<String>() ?? [],
+              (data?['excersice_types'] as List<dynamic>?)?.cast<String>() ?? [],
           selectedDays:
               (data?['training_days'] as List<dynamic>?)?.cast<String>() ?? [],
         );
