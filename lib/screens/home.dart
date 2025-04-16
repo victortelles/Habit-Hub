@@ -77,14 +77,14 @@ class _HomeScreenState extends State<HomeScreen> {
         automaticallyImplyLeading: false,
         title: Text("Habit Hub"),
         titleTextStyle: TextStyle(color: appState.isDarkMode ? Colors.white : Colors.black, fontSize: 20),
-        actions: [
-          IconButton(
-            icon: Icon(appState.isDarkMode ? Icons.wb_sunny: Icons.nightlight_round, color: Colors.blue.shade900),
-            onPressed: () {
-              appState.toggleDarkMode();
-            },
-          )
-        ],
+//        actions: [
+//          IconButton(
+//            icon: Icon(appState.isDarkMode ? Icons.wb_sunny: Icons.nightlight_round, color: Colors.blue.shade900),
+//            onPressed: () {
+//              appState.toggleDarkMode();
+//            },
+//          )
+//        ],
         backgroundColor: appState.isDarkMode ? Colors.black : Colors.grey[200],
       ),
       body: SafeArea(
