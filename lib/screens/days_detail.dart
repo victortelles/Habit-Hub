@@ -28,9 +28,8 @@ class _DaysDetailState extends State<DaysDetail> {
     try {
       final appState = Provider.of<AppState>(context, listen: false);
       final userPreferences = await appState.getUserPreferences();
-      //userPreferences.trainingDays = _selectedDays;
       setState(() {
-        //_selectedDays = userPreferences.trainingDays ?? [];
+        _selectedDays = userPreferences.selectedDays;
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

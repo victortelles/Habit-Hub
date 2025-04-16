@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:habit_hub/screens/sport_detail.dart';
 
 //Providers
 import '../providers/app_state.dart';
@@ -199,6 +200,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (_) => DaysDetail()));
+                    },
+                  ),
+
+                  // Card de Sports
+                  MiniCard(
+                    title: "Tus Deportes",
+                    icon: Icons.sports_soccer,
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => SportDetail()));
                     },
                   ),
                 ],
