@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,6 +10,10 @@ import 'package:provider/provider.dart';
 
 //Widgets
 import '../widgets/nav_bar.dart';
+import '../widgets/profile_avatar.dart';
+
+//Services
+import '../services/profile_image.dart';
 
 //Ventanas
 import 'package:habit_hub/screens/login_options.dart';
@@ -28,6 +33,9 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   int _selectedIndex = 4;
+  //Incialiar image
+  File? _image;
+  final ProfileImageService _imageService = ProfileImageService();
 
   void _onItemTapped(int index) {
     var appState = Provider.of<AppState>(context, listen: false);
@@ -98,6 +106,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  Future<void> _changeProfileImage(AppState appState, User? user) async {
+    final pickedImage = await _imageService.pickImage();
+    if (pickedImage != null) {
+      setState(() {
+        _image = pickedImage;
+      });
+      final imageUrl = await _imageService.uploadImage(pickedImage, user!.uid);
+      if (imageUrl != null) {
+        // Actualiza la URL de la imagen en el perfil del usuario
+        appState.updateProfileImage(imageUrl);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
@@ -125,13 +147,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // Sección 1: Perfil
             //Circulo para avatar
             Center(
-                child: CircleAvatar(
-              radius: 50,
-              backgroundImage:
-                  user?.photoURL != null ? NetworkImage(user!.photoURL!) : null,
-              child:
-                  user?.photoURL == null ? Icon(Icons.person, size: 50) : null,
-            )),
+              child:ProfileAvatar(
+              imageFile: _image,
+              imageUrl: user?.photoURL,
+              onImageTap: () => _changeProfileImage(appState, user),
+              ),
+              //CircleAvatar(
+              //  radius: 50,
+              //  backgroundImage: user?.photoURL != null
+              //      ? NetworkImage(user!.photoURL!)
+              //      : null,
+              //  child: user?.photoURL == null
+              //      ? Icon(Icons.person, size: 50)
+              //      : null,
+              //),
+            ),
 
             // Apartado del nombre
             SizedBox(height: 16),
@@ -162,7 +192,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             //Sección 2: Personalización
             Text("Personalización",
                 style: GoogleFonts.poppins(
-                    fontSize: 18, fontWeight: FontWeight.w600)),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: appState.isDarkMode ? Colors.white : Colors.black,
+                )),
             const SizedBox(height: 10),
             SizedBox(
               height: 300,
@@ -173,7 +206,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 childAspectRatio: 1,
                 physics: const BouncingScrollPhysics(),
                 children: [
-
                   // Card de Habitos
                   MiniCard(
                     title: "Tus Hábitos",
@@ -232,7 +264,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onTap: () => {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => Settings(),
+                  MaterialPageRoute(
+                    builder: (_) => Settings(),
                   ),
                 ),
               },
@@ -276,9 +309,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // Botón eliminar cuenta
             ListTile(
               leading: Icon(Icons.delete_forever, color: Colors.red),
-              title: Text("Eliminar cuenta", style: TextStyle(color: Colors.red)),
+              title:
+                  Text("Eliminar cuenta", style: TextStyle(color: Colors.red)),
               onTap: () {
-                TextEditingController confirmationController = TextEditingController();
+                TextEditingController confirmationController =
+                    TextEditingController();
 
                 //Mostrar mensaje de confirmacion
                 showDialog(
@@ -294,7 +329,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     //Acciones
                     actions: [
-
                       //Cancelar
                       TextButton(
                           onPressed: () => Navigator.pop(context),
@@ -304,24 +338,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       TextButton(
                         onPressed: () async {
                           //Texto de confirmacion
-                          if (confirmationController.text.trim().toLowerCase() =="estoy de acuerdo") {
+                          if (confirmationController.text
+                                  .trim()
+                                  .toLowerCase() ==
+                              "estoy de acuerdo") {
                             try {
                               //Funcionalidad de eliminar usuario
-                              await Provider.of<AppState>(context, listen: false).deleteUserAccount();
+                              await Provider.of<AppState>(context,
+                                      listen: false)
+                                  .deleteUserAccount();
                               Navigator.pushAndRemoveUntil(
                                 context,
-                                MaterialPageRoute(builder: (_) => LoginOptions()),  //redirecciona a login
+                                MaterialPageRoute(
+                                    builder: (_) =>
+                                        LoginOptions()), //redirecciona a login
                                 (_) => false,
                               );
                             } catch (error) {
                               Navigator.pop(context); //Cerrar dialogo
-                              _showAlert("Error al eliminar cuenta: ${error.toString()}");
+                              _showAlert(
+                                  "Error al eliminar cuenta: ${error.toString()}");
                             }
                           } else {
-                            _showAlert("Debes escribir exactamente: estoy de acuerdo");
+                            _showAlert(
+                                "Debes escribir exactamente: estoy de acuerdo");
                           }
                         },
-                        child: Text("Eliminar",style: TextStyle(color: Colors.red)),
+                        child: Text("Eliminar",
+                            style: TextStyle(color: Colors.red)),
                       ),
                     ],
                   ),
