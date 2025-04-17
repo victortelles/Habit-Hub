@@ -197,7 +197,8 @@ class AppState with ChangeNotifier {
           selectedSports:
               (data?['sports'] as List<dynamic>?)?.cast<String>() ?? [],
           selectedExercises:
-              (data?['excersice_types'] as List<dynamic>?)?.cast<String>() ?? [],
+              (data?['excersice_types'] as List<dynamic>?)?.cast<String>() ??
+                  [],
           selectedDays:
               (data?['training_days'] as List<dynamic>?)?.cast<String>() ?? [],
         );
@@ -206,6 +207,28 @@ class AppState with ChangeNotifier {
     } catch (e) {
       print("Error al obtener las preferencias del usuario: $e");
       return UserPreferences(); //Retorna una instancia por defecto en caso de error
+    }
+  }
+
+// Método para actualizar la imagen de perfil del usuario
+  Future<void> updateProfileImage(String imageUrl) async {
+    if (_currentUser == null || _userProfile == null) return;
+
+    setLoading(true);
+    try {
+      // 1. Actualizar el modelo de usuario localmente
+      final updatedUser = _userProfile!.copyWith(profilePic: imageUrl);
+      _userProfile = updatedUser;
+
+      // 2. Guardar la actualización en Firestore
+      await _firestoreService.updateUserProfile(updatedUser);
+
+      notifyListeners();
+    } catch (e) {
+      print('Error updating profile image: $e');
+      // Considera mostrar un mensaje de error al usuario
+    } finally {
+      setLoading(false);
     }
   }
 }
