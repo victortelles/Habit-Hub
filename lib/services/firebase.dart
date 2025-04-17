@@ -76,4 +76,6 @@ class FirestoreService {
 
     await updateUser(uid, data);
   }
+
+  updateUserProfile(UserModel updatedUser) {}
 }
