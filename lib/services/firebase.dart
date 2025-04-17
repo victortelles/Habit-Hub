@@ -77,5 +77,16 @@ class FirestoreService {
     await updateUser(uid, data);
   }
 
-  updateUserProfile(UserModel updatedUser) {}
+  // UPDATE | Funcionalidad para actualizar el perfil del usuario (incluyendo la imagen)
+  Future<void> updateUserProfile(UserModel updatedUser) async {
+    try {
+      await _usersCollection.doc(updatedUser.uid).update({
+        'profile_pic': updatedUser.profilePic,
+      });
+    } catch (e) {
+      print('Error updating user profile: $e');
+      throw e;
+    }
+  }
+
 }

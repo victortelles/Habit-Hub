@@ -112,11 +112,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         _image = pickedImage;
       });
-      final imageUrl = await _imageService.uploadImage(pickedImage, user!.uid);
-      if (imageUrl != null) {
-        // Actualiza la URL de la imagen en el perfil del usuario
-        appState.updateProfileImage(imageUrl);
-      }
+      // Mostrar diálogo de confirmación
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Confirmar cambio"),
+            content: Text("¿Deseas actualizar tu foto de perfil?"),
+            actions: <Widget>[
+              TextButton(
+                child: Text("Cancelar"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    _image = null; // Limpiar imagen si se cancela
+                  });
+                },
+              ),
+              TextButton(
+                child: Text("Aceptar"),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  final imageUrl =
+                      await _imageService.uploadImage(pickedImage, user!.uid);
+                  if (imageUrl != null) {
+                    await appState.updateProfileImage(imageUrl);
+                    // Mostrar notificación de éxito
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Foto de perfil actualizada")),
+                    );
+                  } else {
+                    // Mostrar notificación de error
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content:
+                              Text("Error al actualizar la foto de perfil")),
+                    );
+                  }
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
@@ -147,10 +185,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // Sección 1: Perfil
             //Circulo para avatar
             Center(
-              child:ProfileAvatar(
-              imageFile: _image,
-              imageUrl: user?.photoURL,
-              onImageTap: () => _changeProfileImage(appState, user),
+              child: ProfileAvatar(
+                imageFile: _image,
+                imageUrl: user?.photoURL,
+                onImageTap: () => _changeProfileImage(appState, user),
               ),
               //CircleAvatar(
               //  radius: 50,

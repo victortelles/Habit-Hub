@@ -226,7 +226,7 @@ class AppState with ChangeNotifier {
       notifyListeners();
     } catch (e) {
       print('Error updating profile image: $e');
-      // Considera mostrar un mensaje de error al usuario
+      // mostrar un mensaje de error al usuario
     } finally {
       setLoading(false);
     }
