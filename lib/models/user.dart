@@ -80,7 +80,7 @@ class UserModel {
     List<String>? habits,
     List<String>? sports,
     List<String>? exerciseTypes,
-    List<String>? trainingDays,
+    List<String>? trainingDays, required String profilePic,
   }) {
     return UserModel(
       uid: this.uid,
