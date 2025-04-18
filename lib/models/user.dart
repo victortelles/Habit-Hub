@@ -80,7 +80,8 @@ class UserModel {
     List<String>? habits,
     List<String>? sports,
     List<String>? exerciseTypes,
-    List<String>? trainingDays, required String profilePic,
+    List<String>? trainingDays,
+    String? profilePic,
   }) {
     return UserModel(
       uid: this.uid,
@@ -94,7 +95,7 @@ class UserModel {
       sports: sports ?? this.sports,
       exerciseTypes: exerciseTypes ?? this.exerciseTypes,
       trainingDays: trainingDays ?? this.trainingDays,
-      profilePic: this.profilePic,
+      profilePic: profilePic ?? this.profilePic,
       role: this.role,
       createdAt: this.createdAt,
     );
