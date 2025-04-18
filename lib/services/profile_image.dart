@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter/material.dart';
 
 class ProfileImageService {
   final picker = ImagePicker();
@@ -29,7 +28,7 @@ class ProfileImageService {
           .child('user_images')
           .child('${uid}_$timestamp.jpg'); //Nombre del archivo
       await ref.putFile(image);
-      // Agregar un retraso antes de obtener la URL de la imagen. 
+      // Agregar un retraso antes de obtener la URL de la imagen.
       await Future.delayed(const Duration(seconds: 2));
       return await ref.getDownloadURL();
     } catch (e) {

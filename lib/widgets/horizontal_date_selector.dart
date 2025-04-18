@@ -5,30 +5,24 @@ import '../../providers/app_state.dart';
 class HorizontalDateSelector extends StatelessWidget {
   final AppState appState;
 
-  const HorizontalDateSelector({super.key, required this.appState});
+  const HorizontalDateSelector({Key? key, required this.appState}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    DateTime today = DateTime.now();
-    DateTime firstDayOfWeek = today.subtract(Duration(days: today.weekday - 1));
-
     return SizedBox(
       height: 60,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: 30, // mostrar un rango de 30 dias (1 mes)
+        itemCount: 30, //Mostrar cantidad de dias
         itemBuilder: (context, index) {
-          DateTime date = firstDayOfWeek
-              .add(Duration(days: index)); // Mostrar el dia actual en el centro
-          bool isToday = date.year == today.year &&
-              date.month == today.month &&
-              date.day == today.day;
+          DateTime date = DateTime.now().add(Duration(days: index - 2)); // Día central es el actual
+          bool isSelected = index == 2; // El día actual (central y remarcado)
 
           return Container(
             width: 50,
             margin: EdgeInsets.symmetric(horizontal: 4),
             decoration: BoxDecoration(
-              color: isToday
+              color: isSelected
                   ? Colors.blue.shade900
                   : (appState.isDarkMode ? Colors.grey.shade800 : Colors.white),
               borderRadius: BorderRadius.circular(8),
@@ -39,7 +33,7 @@ class HorizontalDateSelector extends StatelessWidget {
                 Text(
                   DateFormat('E').format(date),
                   style: TextStyle(
-                      color: isToday
+                      color: isSelected
                           ? Colors.white
                           : (appState.isDarkMode
                               ? Colors.white
@@ -48,7 +42,7 @@ class HorizontalDateSelector extends StatelessWidget {
                 Text(
                   "${date.day}",
                   style: TextStyle(
-                      color: isToday
+                      color: isSelected
                           ? Colors.white
                           : (appState.isDarkMode
                               ? Colors.white
