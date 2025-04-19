@@ -15,6 +15,8 @@ HabitHub es una aplicación móvil diseñada para transformar el hábito del eje
 
 - `Flutter: Version: 3.27.2 o Superior`
 - `Dart SDK version: 3.6.1 o Superior`
+- `FlutterFire Version: 1.1.0 o Superior`
+- `Firebase Version: 14.0.1 o Superior`
 
 # Instalación
 1. Clonar el repositorio
@@ -31,7 +33,16 @@ flutter pub get
 3. Configurar variables de entorno (si es necesario)
 Crea un archivo .env en la raíz del proyecto basándote en el archivo .env.example.
 
-4. Ejecutar la aplicación
+4. Configurar Firebase y seleccionar tu proyecto
+Actualmente se esta utilizando:
+- Firebase Auth
+- Firebase FireStore
+```bash
+flutterfire configure
+```
+Y despues seleccionar tu proyecto.
+
+5. Ejecutar la aplicación
 ```bash
 flutter run
 ```
@@ -47,29 +58,55 @@ flutter run -d <device_id>       # Ejecuta en el dispositivo especificado
 
 
 # Estructura del proyecto
-> [!NOTE]
-> *Esta estructura no es oficial a seguir es una referencia*
 
 ```bash
-lib/
-  ├── main.dart                      # Punto de entrada de la aplicación
-  ├── data/                          # Capa de datos
-  │   ├── api/                       # Servicios de API
-  │   ├── providers/                 # Proveedores de estado
-  │   └── repositories/              # Repositorios
-  ├── models/                        # Modelos de datos
-  ├── screens/                       # Pantallas de la aplicación
-  │   ├── auth/                      # Autenticación
-  │   ├── home/                      # Pantalla principal
-  │   ├── workout/                   # Ejercicios
-  │   ├── routine/                   # Rutinas
-  │   ├── challenge/                 # Retos
-  │   └── profile/                   # Perfil de usuario
-  ├── widgets/                       # Componentes de UI reutilizables
-  │   ├── common/                    # Widgets comunes
-  │   ├── workout/                   # Widgets de ejercicios
-  │   └── challenge/                 # Widgets de retos
-  └── utils/                         # Utilidades y herramientas
+    ├── lib/
+    │   ├── firebase_options.dart
+    │   ├── main.dart
+    │   ├── data/
+    │   │   └── personalization_data.dart
+    │   ├── models/
+    │   │   ├── user.dart
+    │   │   └── user_preferences.dart
+    │   ├── providers/
+    │   │   └── app_state.dart
+    │   ├── screens/
+    │   │   ├── activity.dart
+    │   │   ├── community.dart
+    │   │   ├── days_detail.dart
+    │   │   ├── days_selection.dart
+    │   │   ├── exercises_detail.dart
+    │   │   ├── exercises_selection.dart
+    │   │   ├── gender_selection.dart
+    │   │   ├── habits_detail.dart
+    │   │   ├── habits_selection.dart
+    │   │   ├── home.dart
+    │   │   ├── login.dart
+    │   │   ├── login_options.dart
+    │   │   ├── profile.dart
+    │   │   ├── register.dart
+    │   │   ├── settings.dart
+    │   │   ├── sport_detail.dart
+    │   │   ├── sport_selection.dart
+    │   │   └── summary.dart
+    │   ├── services/
+    │   │   ├── auth.dart
+    │   │   ├── firebase.dart
+    │   │   └── profile_image.dart
+    │   └── widgets/
+    │       ├── animated_logo.dart
+    │       ├── community_card.dart
+    │       ├── habits_list.dart
+    │       ├── habits_progress_card.dart
+    │       ├── home_header.dart
+    │       ├── horizontal_date_selector.dart
+    │       ├── nav_bar.dart
+    │       ├── option_card.dart
+    │       ├── personalization_page.dart
+    │       ├── profile_avatar.dart
+    │       ├── profile_personalization.dart
+    │       ├── register_forms.dart
+    │       └── settings_list.dart
 ```
 
 # habit_hub
@@ -93,12 +130,3 @@ samples, guidance on mobile development, and a full API reference.
 
 - Java 17 es compatible con Gradle 7.3
 - Java 23 es compatible con Gradle 8.10
-
-## Comandos para implementar el log-in
-
-1. flutter configure 
-  - Asegúrate de seleccionar el habit-hub
-  - Selecciona android y ios
-2. flutter pub add firebase_core
-3. flutter pub add firebase_auth
-4. flutter pub add firebase_ui_auth
