@@ -75,7 +75,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     var appState = Provider.of<AppState>(context);
-
     return Scaffold(
       backgroundColor: appState.isDarkMode ? Colors.black : Colors.grey[200],
       appBar: AppBar(
@@ -112,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           appState.isDarkMode ? Colors.white : Colors.black)),
               Expanded(
                 //Widget de HabitList
-                child: HabitsList(appState: appState)),
+                child: HabitsList()),
             ],
           ),
         ),

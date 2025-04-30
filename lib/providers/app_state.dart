@@ -44,7 +44,7 @@ class AppState with ChangeNotifier {
   // Cargar perfil de usuario de Firestore
   Future<void> _loadUserProfile() async {
     if (_currentUser == null) return;
-
+    print("user id${_currentUser!.uid}");
     setLoading(true);
     try {
       _userProfile = await _firestoreService.getUserById(_currentUser!.uid);
@@ -159,8 +159,7 @@ class AppState with ChangeNotifier {
 
   //Metodo para Obtener Habitos
   Future<List<String>> getUserHabits() async {
-    if (_currentUser == null) return [];
-
+    if (_currentUser == null) return []; 
     try {
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
           .collection('users')
@@ -177,6 +176,72 @@ class AppState with ChangeNotifier {
       return [];
     }
   }
+
+ Future<List<String>> getUserCreatedHabits() async {
+  if (_currentUser == null) {
+    return [];
+  }
+
+  try {
+    DocumentSnapshot userHabitDoc = await FirebaseFirestore.instance
+        .collection('userCreatedHabits')
+        .doc(_currentUser!.uid)
+        .get();
+
+    if (userHabitDoc.exists && userHabitDoc.data() != null) {
+      Map<String, dynamic>? data = userHabitDoc.data() as Map<String, dynamic>?;
+
+      final List<String> habits =
+          (data?['created_habits'] as List<dynamic>?)?.cast<String>() ?? [];
+
+      // Set internal habit status map
+      _habitStatus = { for (var habit in habits) habit: false };
+
+      notifyListeners(); // Let widgets know data is updated
+
+      return habits;
+    } else {
+      print("No habit document exists for user.");
+      return [];
+    }
+  } catch (e) {
+    print("Error obteniendo los habitos creados por el usuario: $e");
+    return [];
+  }
+}
+
+Future<void> addUserHabit(String habit) async {
+  if (_currentUser == null) return;
+
+  final docRef = FirebaseFirestore.instance
+      .collection('userCreatedHabits')
+      .doc(_currentUser!.uid);
+
+  try {
+    final doc = await docRef.get();
+
+    if (doc.exists) {
+      // Append habit if it's not already in the list
+      List<dynamic> habits = doc.data()?['created_habits'] ?? [];
+      if (!habits.contains(habit)) {
+        habits.add(habit);
+        await docRef.update({'created_habits': habits});
+      }
+    } else {
+      // Create document with new habit
+      await docRef.set({'created_habits': [habit]});
+    }
+
+    // Update local state
+    _habitStatus[habit] = false;
+    notifyListeners();
+  } catch (e) {
+    print("Error adding habit: $e");
+  }
+}
+
+
+
 
   //Metodo para Obtener todas las preferencias del usuario
   Future<UserPreferences> getUserPreferences() async {
