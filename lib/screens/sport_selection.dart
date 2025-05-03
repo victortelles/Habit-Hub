@@ -47,6 +47,12 @@ class _SportsSelectionState extends State<SportsSelection> {
     );
   }
 
+  //Funcionalidad para saltar la seleccion de habitos.
+  void _skipSelection() {
+    _navigateToNext();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return PersonalizationPage(
@@ -57,6 +63,7 @@ class _SportsSelectionState extends State<SportsSelection> {
       onOptionSelected: _onSportSelected,
       onNext: _navigateToNext,
       maxSelections: 5,
+      onSkip: _skipSelection,
     );
   }
 }

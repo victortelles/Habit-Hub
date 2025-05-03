@@ -66,4 +66,5 @@ class DefaultFirebaseOptions {
     storageBucket: dotenv.env['storage_bucket'] ?? 'default_storage_bucket',
     iosBundleId: dotenv.env['ios_bundle_id'] ?? 'default_ios_bundle_id',
   );
+
 }
