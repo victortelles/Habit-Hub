@@ -3,7 +3,6 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -50,21 +49,21 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static FirebaseOptions android = FirebaseOptions(
-    apiKey: dotenv.env['api_key'] ?? 'default_api_key',
-    appId: dotenv.env['app_id'] ?? 'default_app_id',
-    messagingSenderId: dotenv.env['messaging_sender_id'] ?? 'default_messaging_sender_id',
-    projectId: dotenv.env['project_id'] ?? 'default_project_id',
-    storageBucket: dotenv.env['storage_bucket'] ?? 'default_storage_bucket',
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyCVuKQvnStoQKcsuQxc9pE0G6PRGXcJBeE',
+    appId: '1:94366622067:android:153a07c4a90cb941a3a506',
+    messagingSenderId: '94366622067',
+    projectId: 'habit-hub-c4eb4',
+    storageBucket: 'habit-hub-c4eb4.firebasestorage.app',
   );
 
-  static FirebaseOptions ios = FirebaseOptions(
-    apiKey: dotenv.env['api_key'] ?? 'default_api_key',
-    appId: dotenv.env['app_id'] ?? 'default_app_id',
-    messagingSenderId: dotenv.env['messaging_sender_id'] ?? 'default_messaging_sender_id',
-    projectId: dotenv.env['project_id'] ?? 'default_project_id',
-    storageBucket: dotenv.env['storage_bucket'] ?? 'default_storage_bucket',
-    iosBundleId: dotenv.env['ios_bundle_id'] ?? 'default_ios_bundle_id',
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyCuBaI8xNT0UH1bU2kLS1xZUWYKqXptyK0',
+    appId: '1:94366622067:ios:1eb5aaca09e6da08a3a506',
+    messagingSenderId: '94366622067',
+    projectId: 'habit-hub-c4eb4',
+    storageBucket: 'habit-hub-c4eb4.firebasestorage.app',
+    iosBundleId: 'com.example.habitHub',
   );
 
 }

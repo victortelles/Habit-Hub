@@ -139,3 +139,15 @@ samples, guidance on mobile development, and a full API reference.
 2. flutter pub add firebase_core
 3. flutter pub add firebase_auth
 4. flutter pub add firebase_ui_auth
+
+## Agregar flutter_dotenv
+
+1. Correr en terminal:
+``` bash
+flutter pub add flutter_dotenv
+```
+2. Crear un .env con los secretos
+3. Importar las variables de entorno
+``` bash
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+```
