@@ -59,7 +59,6 @@ class _QrScannerState extends State<QrScanner> {
                     ),
                   );
                 } else {
-                  // Abrir dentro de la app en WebView
                   Navigator.push(
                     context,
                     MaterialPageRoute(
