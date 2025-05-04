@@ -122,4 +122,38 @@ class AuthService {
       return 'Error inesperado: $e';
     }
   }
+
+  //Funcionalidad para resetear la password.
+  Future<void> resetPassword({
+    required String email,
+    required BuildContext context,
+  }) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Se ha enviado un correo para restablecer tu contraseña.')),
+      );
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'user-not-found':
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('No se encontró un usuario con ese correo.')),
+          );
+          break;
+        case 'invalid-email':
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('El correo proporcionado no es válido.')),
+          );
+          break;
+        default:
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error: ${e.message}')),
+          );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error inesperado: $e')),
+      );
+    }
+  }
 }

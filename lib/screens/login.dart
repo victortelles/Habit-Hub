@@ -5,6 +5,7 @@ import 'package:habit_hub/screens/register.dart';
 import '../screens/gender_selection.dart';
 import '../services/firebase.dart';
 import '../models/user_preferences.dart';
+import '../widgets/lost_password.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -157,9 +158,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {
-                      // Implementar recuperación de contraseña
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Funcionalidad a implementar")),
+                      // Implementar recuperación de contraseña del widget lost_password
+                      showDialog(context: context,
+                        builder: (context) => LostPassword(),
                       );
                     },
                     child: Text(
