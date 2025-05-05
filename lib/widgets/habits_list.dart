@@ -20,7 +20,6 @@ class _HabitsListState extends State<HabitsList> {
     super.didChangeDependencies();
     final appState = Provider.of<AppState>(context);
     
-    // Ensure this only runs once
     if (!_loaded && appState.currentUser != null) {
       _loaded = true;
       _loadUserCreatedHabits(appState);
@@ -74,7 +73,7 @@ class _HabitsListState extends State<HabitsList> {
 
               await appState.addUserHabit(newHabit.trim());
               Navigator.pop(context);
-              setState(() {}); // Refresh the list
+              setState(() {});
             },
             child: const Text('Crear'),
           ),
@@ -84,8 +83,69 @@ class _HabitsListState extends State<HabitsList> {
   );
 }
 
+void showUpdateDialog(BuildContext context, currenthabit){
+  String newHabitname = ''; 
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text('Actualizar hábito'),
+        content: TextFormField(
+          initialValue: currenthabit,
+          onChanged: (value) => newHabitname = value,
+          decoration: const InputDecoration(hintText: 'Ej. Leer 10 min'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () async {
+              if (newHabitname.trim().isEmpty) return;
+
+              await appState.updateUserHabit(newHabitname.trim(), currenthabit);
+              Navigator.pop(context);
+              _loadUserCreatedHabits(appState);
+              setState(() {});
+            },
+            child: const Text('Actualizar'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void showDeleteDialog(BuildContext context, currentHabit){
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text('¿Estás seguro de que quieres eliminar este hábito?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () async {
+              await appState.deleteUserHabit(currentHabit);
+              Navigator.pop(context);
+              _loadUserCreatedHabits(appState);
+              setState(() {});
+            },
+            child: const Text('Sí'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
     return Scaffold(
+      backgroundColor: appState.isDarkMode ? Colors.black : Colors.grey[200],
   body: ListView(
     children: habitStatus.keys.map((habit) {
       final isSelected = habitStatus[habit]!;
@@ -105,6 +165,22 @@ class _HabitsListState extends State<HabitsList> {
             leading: Icon(
               Icons.check_circle,
               color: isSelected ? Colors.blue.shade900 : Colors.grey,
+            ),
+            trailing: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  onPressed: (){
+                    showUpdateDialog(context, habit);
+                  },
+                  icon: Icon(Icons.edit, color: appState.isDarkMode ? Colors.grey : Colors.black)),
+                IconButton(
+                  onPressed: (){
+                    showDeleteDialog(context, habit);
+                  },
+                  icon: Icon(Icons.delete, color: appState.isDarkMode ? Colors.grey : Colors.black)),  
+              ],
             ),
           ),
         ),
