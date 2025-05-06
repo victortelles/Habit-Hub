@@ -50,22 +50,25 @@ class _HabitsListState extends State<HabitsList> {
     final habitStatus = appState.habitStatus;
     print("Build user: ${appState.currentUser}");
 
-    void _showAddHabitDialog(BuildContext context) {
+void _showAddHabitDialog(BuildContext context) {
   String newHabit = '';
+  Color textcolor = appState.isDarkMode ? Colors.white : Colors.black;
+  Color options_color = appState.isDarkMode ? Colors.white : Colors.blue.shade900; 
 
   showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
-        title: const Text('Agregar nuevo hábito'),
+        title: Text('Agregar nuevo hábito', style: TextStyle(color: textcolor),),
+        backgroundColor: appState.isDarkMode ?  Colors.grey.shade800 : Colors.grey.shade300,
         content: TextField(
           onChanged: (value) => newHabit = value,
-          decoration: const InputDecoration(hintText: 'Ej. Leer 10 min'),
+          decoration: InputDecoration(hintText: 'Ej. Leer 10 min', hintStyle: TextStyle(color: textcolor)),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar'),
+            child: Text('Cancelar', style: TextStyle(color: options_color),),
           ),
           TextButton(
             onPressed: () async {
@@ -75,7 +78,7 @@ class _HabitsListState extends State<HabitsList> {
               Navigator.pop(context);
               setState(() {});
             },
-            child: const Text('Crear'),
+            child: Text('Crear',style: TextStyle(color: options_color)),
           ),
         ],
       );
@@ -85,20 +88,25 @@ class _HabitsListState extends State<HabitsList> {
 
 void showUpdateDialog(BuildContext context, currenthabit){
   String newHabitname = ''; 
+  Color textcolor = appState.isDarkMode ? Colors.white : Colors.black;
+  Color options_color = appState.isDarkMode ? Colors.white : Colors.blue.shade900;
+
   showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
-        title: const Text('Actualizar hábito'),
+        title: Text('Actualizar hábito', style: TextStyle(color: textcolor),),
+        backgroundColor: appState.isDarkMode ?  Colors.grey.shade800 : Colors.grey.shade300,
         content: TextFormField(
           initialValue: currenthabit,
+          style: TextStyle(color: textcolor),
           onChanged: (value) => newHabitname = value,
-          decoration: const InputDecoration(hintText: 'Ej. Leer 10 min'),
+          decoration:  InputDecoration(hintText: 'Ej. Leer 10 min'),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar'),
+            child: Text('Cancelar', style: TextStyle(color: options_color),),
           ),
           TextButton(
             onPressed: () async {
@@ -109,7 +117,7 @@ void showUpdateDialog(BuildContext context, currenthabit){
               _loadUserCreatedHabits(appState);
               setState(() {});
             },
-            child: const Text('Actualizar'),
+            child: Text('Actualizar', style: TextStyle(color: options_color),),
           ),
         ],
       );
@@ -118,15 +126,18 @@ void showUpdateDialog(BuildContext context, currenthabit){
 }
 
 void showDeleteDialog(BuildContext context, currentHabit){
+  Color textcolor = appState.isDarkMode ? Colors.white : Colors.black;
+  Color options_color = appState.isDarkMode ? Colors.white : Colors.blue.shade900;
   showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
-        title: const Text('¿Estás seguro de que quieres eliminar este hábito?'),
+        title: Text('¿Estás seguro de que quieres eliminar este hábito?', style: TextStyle(color: textcolor),),
+        backgroundColor: appState.isDarkMode ?  Colors.grey.shade800 : Colors.grey.shade300,
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('No'),
+            child: Text('No', style: TextStyle(color: options_color),),
           ),
           TextButton(
             onPressed: () async {
@@ -135,7 +146,7 @@ void showDeleteDialog(BuildContext context, currentHabit){
               _loadUserCreatedHabits(appState);
               setState(() {});
             },
-            child: const Text('Sí'),
+            child: Text('Sí', style: TextStyle(color: options_color),),
           ),
         ],
       );
