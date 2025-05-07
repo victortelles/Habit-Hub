@@ -31,31 +31,17 @@ class _HomeScreenState extends State<HomeScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CommunityScreen(),
+          builder: (context) => ExploreScreen(),
         ),
       );
     } else if (index == 2) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ExploreScreen(),
-        ),
-      );
-    } else if (index == 3) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ActivityScreen(),
-        ),
-      );
-    } else if (index == 4) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
           builder: (context) => ProfileScreen(),
         ),
       );
-    } else {
+    }else {
       setState(() {
         _selectedIndex = index;
       });

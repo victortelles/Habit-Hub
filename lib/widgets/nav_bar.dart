@@ -15,16 +15,8 @@ class BottomNavBar extends StatelessWidget {
           label: "Inicio",
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.group),
-          label: "Comunidad",
-        ),
-        BottomNavigationBarItem(
           icon: Icon(Icons.event),
           label: "Eventos",
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.emoji_events),
-          label: "Actividad",
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person),

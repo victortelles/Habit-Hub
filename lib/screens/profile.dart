@@ -33,7 +33,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  int _selectedIndex = 4;
+  int _selectedIndex = 2;
   //Incialiar image
   File? _image;
   final ProfileImageService _imageService = ProfileImageService();
@@ -52,24 +52,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CommunityScreen(),
-        ),
-      );
-    } else if (index == 2) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
           builder: (context) => ExploreScreen(),
         ),
       );
-    } else if (index == 3) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ActivityScreen(),
-        ),
-      );
-    } else {
+    }else {
       setState(() {
         _selectedIndex = index;
       });

@@ -19,7 +19,7 @@ class ExploreScreen extends StatefulWidget {
 
 
 class _ExploreScreenState extends State<ExploreScreen> {
-  int _selectedIndex = 2;
+  int _selectedIndex = 1;
 
   void _onItemTapped(int index) {
     var appState = Provider.of<AppState>(context, listen: false);
@@ -31,28 +31,14 @@ class _ExploreScreenState extends State<ExploreScreen> {
           builder: (context) => HomeScreen(),
         ),
       );
-    } else if (index == 1) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CommunityScreen(),
-        ),
-      );
-    } else if (index == 3) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ActivityScreen(),
-        ),
-      );
-    } else if (index == 4) {
+    } else if (index == 2) {
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => ProfileScreen(),
         ),
       );
-    } else {
+    }else {
       setState(() {
         _selectedIndex = index;
       });
