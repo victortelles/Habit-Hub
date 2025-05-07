@@ -67,7 +67,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
       backgroundColor: appState.isDarkMode ? Colors.black : Colors.grey[200],
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text("Explorar"),
+        title: Text("Explorar eventos"),
         titleTextStyle: TextStyle(
           color: appState.isDarkMode ? Colors.white : Colors.black,
           fontSize: 20,
