@@ -8,6 +8,7 @@ import '../widgets/nav_bar.dart';
 import 'package:habit_hub/screens/profile.dart';
 import 'package:habit_hub/screens/home.dart';
 import 'package:habit_hub/screens/activity.dart';
+import 'package:habit_hub/screens/events.dart';
 
 class CommunityScreen extends StatefulWidget {
   @override
@@ -37,22 +38,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
         ),
       );
     } else if (index == 2) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Pantalla pendiente'),
-            content: Text('Puchurraste explorar'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ExploreScreen(),
+        ),
       );
     } else if (index == 3) {
       Navigator.push(

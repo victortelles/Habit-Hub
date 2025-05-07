@@ -130,3 +130,24 @@ samples, guidance on mobile development, and a full API reference.
 
 - Java 17 es compatible con Gradle 7.3
 - Java 23 es compatible con Gradle 8.10
+
+## Comandos para implementar el log-in
+
+1. flutter configure 
+  - Asegúrate de seleccionar el habit-hub
+  - Selecciona android y ios
+2. flutter pub add firebase_core
+3. flutter pub add firebase_auth
+4. flutter pub add firebase_ui_auth
+
+## Agregar flutter_dotenv
+
+1. Correr en terminal:
+``` bash
+flutter pub add flutter_dotenv
+```
+2. Crear un .env con los secretos
+3. Importar las variables de entorno
+``` bash
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+```

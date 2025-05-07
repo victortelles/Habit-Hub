@@ -8,6 +8,7 @@ import '../providers/app_state.dart';
 import 'package:habit_hub/screens/profile.dart';
 import 'package:habit_hub/screens/home.dart';
 import 'package:habit_hub/screens/community.dart';
+import 'package:habit_hub/screens/events.dart';
 
 class ActivityScreen extends StatefulWidget {
   @override
@@ -31,26 +32,11 @@ class _ActivityScreenState extends State<ActivityScreen> {
         MaterialPageRoute(builder: (context) => CommunityScreen()),
       );
     } else if (index == 2) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            backgroundColor: appState.isDarkMode ? Colors.grey[900] : Colors.white,
-            title: Text('Pantalla pendiente',
-                style: TextStyle(color: appState.isDarkMode ? Colors.white : Colors.black)),
-            content: Text('Puchurraste explorar',
-                style: TextStyle(color: appState.isDarkMode ? Colors.white70 : Colors.black54)),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK',
-                    style: TextStyle(color: appState.isDarkMode ? Colors.blue.shade300 : Colors.blue)),
-              ),
-            ],
-          );
-        },
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ExploreScreen(),
+        ),
       );
     } else if (index == 4) {
       Navigator.push(
