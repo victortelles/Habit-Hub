@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:habit_hub/services/auth.dart';
+import 'package:flutter/services.dart'; // Para cargar el PDF
+import 'package:flutter_pdfview/flutter_pdfview.dart'; // Asegúrate de agregar esta dependencia en pubspec.yaml
 //Widgets
 import 'package:habit_hub/widgets/animated_logo.dart';
 //Ventanas
 import 'package:habit_hub/screens/login.dart';
 import 'package:habit_hub/screens/register.dart';
-
 
 class LoginOptions extends StatefulWidget {
   const LoginOptions({super.key});
@@ -199,10 +200,22 @@ class _LoginOptionsState extends State<LoginOptions> {
                     //Terminos y condiciones
                     Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        "Al continuar aceptas nuestros términos de uso y política de privacidad",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white70, fontSize: 12),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TermsAndConditionsScreen(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "Al registrarte aceptas los Términos y Condiciones",
+                          style: TextStyle(
+                            color: Colors.white,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
                       ),
                     )
                   ],
@@ -253,6 +266,32 @@ class SocialButton extends StatelessWidget {
           padding: EdgeInsets.all(12),
         ),
         child: Icon(iconData, color: Colors.blueAccent, size: 30),
+      ),
+    );
+  }
+}
+
+// Añadir un PDF genérico para términos y condiciones
+class TermsAndConditionsScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Términos y Condiciones'),
+      ),
+      body: FutureBuilder<String>(
+        future: rootBundle.loadString('assets/pdf/terminos_y_condiciones.pdf'),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error al cargar el PDF'));
+          } else {
+            return PDFView(
+              filePath: snapshot.data,
+            );
+          }
+        },
       ),
     );
   }
