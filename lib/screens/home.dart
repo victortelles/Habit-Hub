@@ -8,12 +8,12 @@ import '../providers/app_state.dart';
 import '../widgets/home_header.dart';
 import '../widgets/horizontal_date_selector.dart';
 import '../widgets/habits_progress_card.dart';
-import '../widgets/community_card.dart';
+//import '../widgets/community_card.dart';
 import '../widgets/habits_list.dart';
 //Screens
 import 'package:habit_hub/screens/profile.dart';
 import 'package:habit_hub/screens/activity.dart';
-import 'package:habit_hub/screens/community.dart';
+//import 'package:habit_hub/screens/community.dart';
 import 'package:habit_hub/screens/events.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -77,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
               HabitsProgressCard(appState: appState),
               SizedBox(height: 16),
               //Widget de Community
-              CommunityCard(),
+              //CommunityCard(),
               SizedBox(height: 16),
               Text("Tus hábitos",
                   style: GoogleFonts.poppins(
