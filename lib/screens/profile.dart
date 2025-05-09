@@ -21,7 +21,6 @@ import 'package:habit_hub/screens/activity.dart';
 import 'package:habit_hub/screens/home.dart';
 import 'package:habit_hub/screens/community.dart';
 import 'package:habit_hub/widgets/profile_personalization.dart';
-import 'package:habit_hub/screens/settings.dart';
 import 'package:habit_hub/screens/habits_detail.dart';
 import 'package:habit_hub/screens/days_detail.dart';
 import 'package:habit_hub/screens/exercises_detail.dart';
@@ -265,28 +264,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             Spacer(),
 
-            //Sección 3: Opciones
+            // Modo oscuro
             ListTile(
-              leading: Icon(Icons.settings,
-                  color: appState.isDarkMode ? Colors.white : Colors.black),
-              title: Text("Configuración",
-                  style: TextStyle(
-                      color:
-                          appState.isDarkMode ? Colors.white : Colors.black)),
-              trailing: Icon(Icons.arrow_forward_ios,
-                  color: appState.isDarkMode ? Colors.white70 : Colors.black54),
-              onTap: () => {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => Settings(),
-                  ),
+              leading: Icon(
+                appState.isDarkMode ? Icons.brightness_3 : Icons.brightness_7,
+                color: appState.isDarkMode ? Colors.white : Colors.black,
+              ),
+              title: Text(
+                "Modo Oscuro",
+                style: TextStyle(
+                  color: appState.isDarkMode ? Colors.white : Colors.black,
                 ),
-              },
+              ),
+              trailing: Switch(
+                value: appState.isDarkMode,
+                onChanged: (value) {
+                  appState.toggleDarkMode();
+                },
+              ),
             ),
             Divider(
                 color: appState.isDarkMode ? Colors.white24 : Colors.black12),
 
+            //Sección 3: Opciones
             // Botón cerrar sesión
             ListTile(
               leading: Icon(Icons.exit_to_app, color: Colors.red),
