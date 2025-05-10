@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:habit_hub/services/auth.dart';
 import 'package:flutter/services.dart'; // Para cargar el PDF
-import 'package:flutter_pdfview/flutter_pdfview.dart'; // Asegúrate de agregar esta dependencia en pubspec.yaml
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 //Widgets
 import 'package:habit_hub/widgets/animated_logo.dart';
+import 'package:habit_hub/widgets/pdf_viewer_widget.dart';
 //Ventanas
 import 'package:habit_hub/screens/login.dart';
 import 'package:habit_hub/screens/register.dart';
@@ -279,20 +282,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Términos y Condiciones'),
       ),
-      body: FutureBuilder<String>(
-        future: rootBundle.loadString('assets/pdf/terminos_y_condiciones.pdf'),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error al cargar el PDF'));
-          } else {
-            return PDFView(
-              filePath: snapshot.data,
-            );
-          }
-        },
-      ),
+      body: PDFViewerWidget(assetPath: 'assets/pdf/TERMS_AND_CONDITIONS.pdf'),
     );
   }
 }
