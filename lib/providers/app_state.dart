@@ -253,19 +253,21 @@ class AppState with ChangeNotifier {
           .get();
 
       if (userHabitDoc.exists && userHabitDoc.data() != null) {
-        Map<String, dynamic>? data = userHabitDoc.data() as Map<String, dynamic>?;
+        Map<String, dynamic>? data =
+            userHabitDoc.data() as Map<String, dynamic>?;
 
         final List<Map<String, dynamic>> habits =
             (data?['created_habits'] as List<dynamic>?)?.map((habit) {
-          if (habit is Map<String, dynamic>) {
-            return {
-              'title': habit['title'] ?? '',
-              'days': List<String>.from(habit['days'] ?? []),
-            };
-          } else {
-            return {'title': '', 'days': []};
-          }
-        }).toList() ?? [];
+                  if (habit is Map<String, dynamic>) {
+                    return {
+                      'title': habit['title'] ?? '',
+                      'days': List<String>.from(habit['days'] ?? []),
+                    };
+                  } else {
+                    return {'title': '', 'days': []};
+                  }
+                }).toList() ??
+                [];
 
         _habitStatus = {for (var habit in habits) habit['title']: false};
 
@@ -317,7 +319,9 @@ class AppState with ChangeNotifier {
 
   //PUT | Funcionalidad para actualizar un hábito de usuario
   Future<void> updateUserHabit(
-      {String? newHabitName, String? oldHabitName, List<String>? selectedDays}) async {
+      {String? newHabitName,
+      String? oldHabitName,
+      List<String>? selectedDays}) async {
     if (_currentUser == null) return;
 
     final docRef = FirebaseFirestore.instance
@@ -364,4 +368,22 @@ class AppState with ChangeNotifier {
     }
   }
 
+  // Agregar eventos
+
+  final List<Event> _eventos = [];
+
+  List<Event> get eventos => List.unmodifiable(_eventos);
+
+  void agregarEvento(Event evento) {
+    _eventos.add(evento);
+    notifyListeners();
+  }
+}
+
+class Event {
+  final String summary;
+  final String location;
+  final DateTime start;
+
+  Event({required this.summary, required this.location, required this.start});
 }
