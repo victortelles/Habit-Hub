@@ -69,11 +69,13 @@ class AppState with ChangeNotifier {
     notifyListeners();
   }
 
+  // Método para actualizar el estado de un hábito
   void updateHabit(String habit, bool status) {
     _habitStatus[habit] = status;
     notifyListeners();
   }
 
+  // Método para establecer el estado de carga
   void setLoading(bool loading) {
     _isLoading = loading;
     notifyListeners();
