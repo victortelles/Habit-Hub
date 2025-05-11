@@ -10,7 +10,7 @@ class HabitsList extends StatefulWidget {
 }
 
 class _HabitsListState extends State<HabitsList> {
-  List<String> _createdHabits = [];
+  List<dynamic> _createdHabits = [];
   bool _loaded = false;
 
   
@@ -153,51 +153,61 @@ void showDeleteDialog(BuildContext context, currentHabit){
     },
   );
 }
-
+  
 
     return Scaffold(
       backgroundColor: appState.isDarkMode ? Colors.black : Colors.grey[200],
   body: ListView(
-    children: habitStatus.keys.map((habit) {
-      final isSelected = habitStatus[habit]!;
-      return GestureDetector(
-        onTap: () {
-          appState.updateHabit(habit, !isSelected);
-        },
-        child: Card(
-          color: appState.isDarkMode ? Colors.grey.shade800 : Colors.grey.shade300,
-          child: ListTile(
-            title: Text(
-              habit,
-              style: TextStyle(
-                color: appState.isDarkMode ? Colors.white : Colors.black,
-              ),
-            ),
-            leading: Icon(
-              Icons.check_circle,
-              color: isSelected ? Colors.blue.shade900 : Colors.grey,
-            ),
-            trailing: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  onPressed: (){
-                    showUpdateDialog(context, habit);
-                  },
-                  icon: Icon(Icons.edit, color: appState.isDarkMode ? Colors.grey : Colors.black)),
-                IconButton(
-                  onPressed: (){
-                    showDeleteDialog(context, habit);
-                  },
-                  icon: Icon(Icons.delete, color: appState.isDarkMode ? Colors.grey : Colors.black)),  
-              ],
+  children: habitStatus.keys.toList().asMap().entries.map((entry) {
+    final index = entry.key;
+    final habit = entry.value;
+    final isSelected = habitStatus[habit]!;
+
+    return GestureDetector(
+      onTap: () {
+        appState.updateHabit(habit, !isSelected);
+      },
+      child: Card(
+        color: appState.isDarkMode ? Colors.grey.shade800 : Colors.grey.shade300,
+        child: ListTile(
+          title: Text(
+            habit,
+            style: TextStyle(
+              color: appState.isDarkMode ? Colors.white : Colors.black,
             ),
           ),
+          leading: Icon(
+            Icons.check_circle,
+            color: isSelected ? Colors.blue.shade900 : Colors.grey,
+          ),
+          trailing: index < appState.notEditableLength
+              ? null
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        showUpdateDialog(context, habit);
+                      },
+                      icon: Icon(Icons.edit,
+                          color: appState.isDarkMode ? Colors.grey : Colors.black),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        showDeleteDialog(context, habit);
+                      },
+                      icon: Icon(Icons.delete,
+                          color: appState.isDarkMode ? Colors.grey : Colors.black),
+                    ),
+                  ],
+                ),
         ),
-      );
-    }).toList(),
-  ),
+      ),
+    );
+  }).toList(),
+),
+
   floatingActionButton: FloatingActionButton(
     onPressed: () => _showAddHabitDialog(context),
     backgroundColor: Colors.blue.shade900,
