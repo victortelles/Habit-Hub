@@ -387,6 +387,8 @@ class _HabitsListState extends State<HabitsList> {
                               appState.isDarkMode ? Colors.white : Colors.black,
                           fontWeight: FontWeight.bold,
                         ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         habit['days']
