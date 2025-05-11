@@ -254,10 +254,14 @@ class AppState with ChangeNotifier {
 
         final List<Map<String, dynamic>> habits =
             (data?['created_habits'] as List<dynamic>?)?.map((habit) {
-          return {
-            'title': habit['title'],
-            'days': List<String>.from(habit['days'] ?? []),
-          };
+          if (habit is Map<String, dynamic>) {
+            return {
+              'title': habit['title'] ?? '',
+              'days': List<String>.from(habit['days'] ?? []),
+            };
+          } else {
+            return {'title': '', 'days': []};
+          }
         }).toList() ?? [];
 
         _habitStatus = {for (var habit in habits) habit['title']: false};
