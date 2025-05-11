@@ -12,6 +12,8 @@ class PersonalizationPage extends StatelessWidget {
   final int maxSelections;
   final bool showSelection;
   final bool showSkipButton;
+  final Color? backgroundColor;
+  final Color? textColor;
 
   const PersonalizationPage({
     super.key,
@@ -25,6 +27,8 @@ class PersonalizationPage extends StatelessWidget {
     this.maxSelections = 0,
     this.showSelection = true,  //Contorno de seleccionados
     this.showSkipButton = true, //Boton de omitir
+    this.backgroundColor,
+    this.textColor,
   });
 
   @override
@@ -33,20 +37,20 @@ class PersonalizationPage extends StatelessWidget {
     final Color primaryColor = const Color(0xFF3942FF);
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: backgroundColor ?? Colors.grey.shade100,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: const Color(0xFF2196F3),
-        title: Text(title, style: const TextStyle(color: Colors.white)),
+        title: Text(title, style: TextStyle(color: textColor ?? Colors.white)),
         centerTitle: true,
         actions: [
           if (showSkipButton && onSkip != null)
             TextButton(
               onPressed: onSkip,
-              child: const Text(
+              child: Text(
                 'Omitir >',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: textColor ?? Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -67,9 +71,10 @@ class PersonalizationPage extends StatelessWidget {
               //Texto de instruccion
               Text(
                 instructionText,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
+                  color: textColor ?? Colors.black,
                 ),
               ),
 
@@ -80,9 +85,9 @@ class PersonalizationPage extends StatelessWidget {
               if (maxSelections > 0)
                 Text(
                   'Selecciona hasta $maxSelections opciones',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
-                    color: Colors.grey,
+                    color: textColor?.withOpacity(0.7) ?? Colors.grey,
                   ),
                 ),
 

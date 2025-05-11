@@ -54,7 +54,6 @@ class _HabitsListState extends State<HabitsList> {
   void _showAddHabitDialog(BuildContext context) {
     String newHabit = '';
     List<String> selectedDays = [];
-    //Lista de los dias de la semana
     List<String> daysOfWeek = [
       "Sunday",
       "Monday",
@@ -66,23 +65,21 @@ class _HabitsListState extends State<HabitsList> {
     ];
 
     final appState = Provider.of<AppState>(context, listen: false);
-    //Modo oscuro
-    Color textcolor = appState.isDarkMode ? Colors.white : Colors.black;
-    //Color de los botones
-    Color options_color = appState.isDarkMode ? Colors.white : Colors.blue.shade900;
+    Color dialogBackgroundColor =
+        appState.isDarkMode ? Colors.grey.shade900 : Colors.white;
+    Color textColor = appState.isDarkMode ? Colors.white : Colors.black;
+    Color positiveButtonColor = Colors.blue.shade700;
+    Color negativeButtonColor = Colors.red.shade700;
 
     showDialog(
       context: context,
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setState) {
-            //Dialogo para añadir habitos
             return AlertDialog(
               title: Text('Agregar nuevo hábito',
-                  style: TextStyle(color: textcolor)),
-              backgroundColor: appState.isDarkMode
-                  ? Colors.grey.shade800
-                  : Colors.grey.shade300,
+                  style: TextStyle(color: textColor)),
+              backgroundColor: dialogBackgroundColor,
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -90,14 +87,15 @@ class _HabitsListState extends State<HabitsList> {
                     onChanged: (value) => newHabit = value,
                     decoration: InputDecoration(
                       hintText: 'Ej. Leer 10 min',
-                      hintStyle: TextStyle(color: textcolor),
+                      hintStyle: TextStyle(color: textColor.withOpacity(0.7)),
                     ),
+                    style: TextStyle(color: textColor),
                   ),
                   SizedBox(height: 16),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text('Selecciona los días',
-                        style: TextStyle(color: textcolor)),
+                        style: TextStyle(color: textColor)),
                   ),
                   SizedBox(height: 8),
                   Wrap(
@@ -119,9 +117,8 @@ class _HabitsListState extends State<HabitsList> {
                           width: 50,
                           height: 50,
                           decoration: BoxDecoration(
-                            color: isSelected
-                                ? Color(0xFF0046A1)
-                                : Color(0xFF9E9E9E),
+                            color:
+                                isSelected ? Colors.blue.shade800 : Colors.grey,
                             shape: BoxShape.circle,
                           ),
                           alignment: Alignment.center,
@@ -138,8 +135,8 @@ class _HabitsListState extends State<HabitsList> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child:
-                      Text('Cancelar', style: TextStyle(color: Color(0xFF0046A1))),
+                  child: Text('Cancelar',
+                      style: TextStyle(color: negativeButtonColor)),
                 ),
                 TextButton(
                   onPressed: () async {
@@ -149,14 +146,14 @@ class _HabitsListState extends State<HabitsList> {
                     Navigator.pop(context);
                     setState(() {});
 
-                    // Mostrar un SnackBar al crear un hábito
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Hábito "$newHabit" creado con éxito.'),
                       ),
                     );
                   },
-                  child: Text('Crear', style: TextStyle(color: options_color)),
+                  child: Text('Crear',
+                      style: TextStyle(color: positiveButtonColor)),
                 ),
               ],
             );
@@ -173,10 +170,19 @@ class _HabitsListState extends State<HabitsList> {
     print("Build user: ${appState.currentUser}");
 
     // Obtener el día actual
-    String today = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][DateTime.now().weekday % 7];
+    String today = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    ][DateTime.now().weekday % 7];
 
     // Filtrar los hábitos por el día actual
-    List<Map<String, dynamic>> filteredHabits = _createdHabits.where((habit) => habit['days'].contains(today)).toList();
+    List<Map<String, dynamic>> filteredHabits =
+        _createdHabits.where((habit) => habit['days'].contains(today)).toList();
 
     // Actualización del diálogo de actualización de hábito
     void showUpdateDialog(
@@ -193,20 +199,34 @@ class _HabitsListState extends State<HabitsList> {
         "Saturday"
       ];
 
+      //Declarar colores
+      final appState = Provider.of<AppState>(context, listen: false);
+      Color dialogBackgroundColor = appState.isDarkMode ? Colors.grey.shade900 : Colors.white;
+      Color textColor = appState.isDarkMode ? Colors.white : Colors.black;
+      Color positiveButtonColor = Colors.blue.shade700;
+      Color negativeButtonColor = Colors.red.shade700;
+      Color selectedDayColor = appState.isDarkMode ? Colors.blue.shade800 : Colors.blue.shade900;
+
       showDialog(
         context: context,
         builder: (context) {
           return StatefulBuilder(
             builder: (context, setState) {
               return AlertDialog(
-                title: Text('Actualizar hábito'),
+                title: Text('Actualizar hábito',
+                    style: TextStyle(color: textColor)),
+                backgroundColor: dialogBackgroundColor,
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextFormField(
                       initialValue: newHabitName,
                       onChanged: (value) => newHabitName = value,
-                      decoration: InputDecoration(hintText: 'Ej. Leer 10 min'),
+                      decoration: InputDecoration(
+                        hintText: 'Ej. Leer 10 min',
+                        hintStyle: TextStyle(color: textColor.withOpacity(0.7)),
+                      ),
+                      style: TextStyle(color: textColor),
                     ),
                     SizedBox(height: 16),
                     Wrap(
@@ -228,9 +248,8 @@ class _HabitsListState extends State<HabitsList> {
                             width: 50,
                             height: 50,
                             decoration: BoxDecoration(
-                              color: isSelected
-                                  ? Color(0xFF0046A1)
-                                  : Theme.of(context).disabledColor,
+                              color:
+                                  isSelected ? selectedDayColor : Colors.grey,
                               shape: BoxShape.circle,
                             ),
                             alignment: Alignment.center,
@@ -248,7 +267,8 @@ class _HabitsListState extends State<HabitsList> {
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: Text('Cancelar'),
+                    child: Text('Cancelar',
+                        style: TextStyle(color: negativeButtonColor)),
                   ),
                   TextButton(
                     onPressed: () async {
@@ -276,7 +296,8 @@ class _HabitsListState extends State<HabitsList> {
                       );
                       _loadUserCreatedHabits(appState);
                     },
-                    child: Text('Actualizar'),
+                    child: Text('Actualizar',
+                        style: TextStyle(color: positiveButtonColor)),
                   ),
                 ],
               );
@@ -288,26 +309,28 @@ class _HabitsListState extends State<HabitsList> {
 
     //Dialogo para mostrar el eliminar habito
     void showDeleteDialog(BuildContext context, currentHabit) {
-      Color textcolor = appState.isDarkMode ? Colors.white : Colors.black;
-      Color options_color =
-          appState.isDarkMode ? Colors.white : Colors.blue.shade900;
+      //Declarar colores
+      final appState = Provider.of<AppState>(context, listen: false);
+      Color dialogBackgroundColor = appState.isDarkMode ? Colors.grey.shade900 : Colors.white;
+      Color textColor = appState.isDarkMode ? Colors.white : Colors.black;
+      Color positiveButtonColor = Colors.blue.shade700;
+      Color negativeButtonColor = Colors.red.shade700;
+
       showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: Text(
               '¿Estás seguro de que quieres eliminar este hábito?',
-              style: TextStyle(color: textcolor),
+              style: TextStyle(color: textColor),
             ),
-            backgroundColor: appState.isDarkMode
-                ? Colors.grey.shade800
-                : Colors.grey.shade300,
+            backgroundColor: dialogBackgroundColor,
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text(
                   'No',
-                  style: TextStyle(color: options_color),
+                  style: TextStyle(color: negativeButtonColor),
                 ),
               ),
               TextButton(
@@ -320,13 +343,14 @@ class _HabitsListState extends State<HabitsList> {
                   // Mostrar un SnackBar al eliminar un hábito
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Hábito "$currentHabit" eliminado con éxito.'),
+                      content:
+                          Text('Hábito "$currentHabit" eliminado con éxito.'),
                     ),
                   );
                 },
                 child: Text(
                   'Sí',
-                  style: TextStyle(color: options_color),
+                  style: TextStyle(color: positiveButtonColor),
                 ),
               ),
             ],
@@ -359,7 +383,8 @@ class _HabitsListState extends State<HabitsList> {
                       Text(
                         habitTitle,
                         style: TextStyle(
-                          color: appState.isDarkMode ? Colors.white : Colors.black,
+                          color:
+                              appState.isDarkMode ? Colors.white : Colors.black,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -390,7 +415,8 @@ class _HabitsListState extends State<HabitsList> {
                         },
                         icon: Icon(
                           Icons.edit,
-                          color: appState.isDarkMode ? Colors.grey : Colors.black,
+                          color:
+                              appState.isDarkMode ? Colors.blue : Colors.blue,
                         ),
                       ),
                       IconButton(
@@ -399,7 +425,7 @@ class _HabitsListState extends State<HabitsList> {
                         },
                         icon: Icon(
                           Icons.delete,
-                          color: appState.isDarkMode ? Colors.grey : Colors.black,
+                          color: appState.isDarkMode ? Colors.red : Colors.red,
                         ),
                       ),
                     ],

@@ -69,10 +69,19 @@ class _SportDetailState extends State<SportDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final appState = Provider.of<AppState>(context);
+    Color backgroundColor = appState.isDarkMode ? Colors.black : Colors.white;
+    Color textColor = appState.isDarkMode ? Colors.white : Colors.black;
+
     return _isLoading
         ? Scaffold(
-            appBar: AppBar(title: const Text("Tus Deportes")),
-            body: const Center(child: CircularProgressIndicator()),
+            appBar: AppBar(
+              title: Text("Tus Deportes", style: TextStyle(color: textColor)),
+              backgroundColor: backgroundColor,
+              iconTheme: IconThemeData(color: textColor),
+            ),
+            body: Center(child: CircularProgressIndicator()),
+            backgroundColor: backgroundColor,
           )
         : PersonalizationPage(
             title: "Tus Deportes",
@@ -81,9 +90,8 @@ class _SportDetailState extends State<SportDetail> {
             selectedValues: _selectedSports,
             onOptionSelected: _onSportSelected,
             onNext: _savePreferences,
-            maxSelections: 0,
-            showSelection: true,
-            showSkipButton: false,
+            backgroundColor: backgroundColor,
+            textColor: textColor,
           );
   }
 }
