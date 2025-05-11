@@ -83,10 +83,19 @@ class _ExercisesDetailState extends State<ExercisesDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final appState = Provider.of<AppState>(context);
+    Color backgroundColor = appState.isDarkMode ? Colors.black : Colors.white;
+    Color textColor = appState.isDarkMode ? Colors.white : Colors.black;
+
     return _isLoading
         ? Scaffold(
-            appBar: AppBar(title: Text("Tus Ejercicios")),
+            appBar: AppBar(
+              title: Text("Tus Ejercicios", style: TextStyle(color: textColor)),
+              backgroundColor: backgroundColor,
+              iconTheme: IconThemeData(color: textColor),
+            ),
             body: Center(child: CircularProgressIndicator()),
+            backgroundColor: backgroundColor,
           )
         : PersonalizationPage(
             title: "Tus Ejercicios",
@@ -96,6 +105,8 @@ class _ExercisesDetailState extends State<ExercisesDetail> {
             onOptionSelected: _onExerciseSelected,
             onNext: _saveExercises,
             showSelection: true,
+            backgroundColor: backgroundColor,
+            textColor: textColor,
           );
   }
 }

@@ -83,10 +83,19 @@ class _DaysDetailState extends State<DaysDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final appState = Provider.of<AppState>(context);
+    Color backgroundColor = appState.isDarkMode ? Colors.black : Colors.white;
+    Color textColor = appState.isDarkMode ? Colors.white : Colors.black;
+
     return _isLoading
         ? Scaffold(
-            appBar: AppBar(title: const Text("Tus Días")),
-            body: const Center(child: CircularProgressIndicator()),
+            appBar: AppBar(
+              title: Text("Tus Días", style: TextStyle(color: textColor)),
+              backgroundColor: backgroundColor,
+              iconTheme: IconThemeData(color: textColor),
+            ),
+            body: Center(child: CircularProgressIndicator()),
+            backgroundColor: backgroundColor,
           )
         : PersonalizationPage(
             title: "Tus Días",
@@ -95,6 +104,8 @@ class _DaysDetailState extends State<DaysDetail> {
             selectedValues: _selectedDays,
             onOptionSelected: _onDaySelected,
             onNext: _savePreferences,
+            backgroundColor: backgroundColor,
+            textColor: textColor,
           );
   }
 }

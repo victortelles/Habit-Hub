@@ -2,7 +2,9 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:habit_hub/screens/home.dart';
 import 'package:habit_hub/screens/sport_detail.dart';
+import 'package:habit_hub/widgets/profile_personalization.dart';
 
 //Providers
 import '../providers/app_state.dart';
@@ -11,20 +13,15 @@ import 'package:provider/provider.dart';
 //Widgets
 import '../widgets/nav_bar.dart';
 import '../widgets/profile_avatar.dart';
+import '../widgets/all_habits_list.dart';
 
 //Services
 import '../services/profile_image.dart';
 
 //Ventanas
 import 'package:habit_hub/screens/login_options.dart';
-import 'package:habit_hub/screens/activity.dart';
-import 'package:habit_hub/screens/home.dart';
-import 'package:habit_hub/screens/community.dart';
-import 'package:habit_hub/widgets/profile_personalization.dart';
-import 'package:habit_hub/screens/settings.dart';
-import 'package:habit_hub/screens/habits_detail.dart';
-import 'package:habit_hub/screens/days_detail.dart';
 import 'package:habit_hub/screens/exercises_detail.dart';
+import 'package:habit_hub/screens/days_detail.dart';
 import 'package:habit_hub/screens/events.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -39,8 +36,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final ProfileImageService _imageService = ProfileImageService();
 
   void _onItemTapped(int index) {
-    var appState = Provider.of<AppState>(context, listen: false);
-
     if (index == 0) {
       Navigator.push(
         context,
@@ -55,7 +50,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           builder: (context) => ExploreScreen(),
         ),
       );
-    }else {
+    } else {
       setState(() {
         _selectedIndex = index;
       });
@@ -200,7 +195,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             )),
 
-//            SizedBox(height: 30),
             SizedBox(height: 16),
 
             //Sección 2: Personalización
@@ -210,7 +204,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   fontWeight: FontWeight.w600,
                   color: appState.isDarkMode ? Colors.white : Colors.black,
                 )),
+
             const SizedBox(height: 10),
+
             SizedBox(
               height: 300,
               child: GridView.count(
@@ -226,7 +222,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     icon: Icons.self_improvement,
                     onTap: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => HabitsDetail()));
+                          MaterialPageRoute(builder: (_) => AllHabitsList()));
                     },
                   ),
 
@@ -265,28 +261,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             Spacer(),
 
-            //Sección 3: Opciones
+            // Modo oscuro
             ListTile(
-              leading: Icon(Icons.settings,
-                  color: appState.isDarkMode ? Colors.white : Colors.black),
-              title: Text("Configuración",
-                  style: TextStyle(
-                      color:
-                          appState.isDarkMode ? Colors.white : Colors.black)),
-              trailing: Icon(Icons.arrow_forward_ios,
-                  color: appState.isDarkMode ? Colors.white70 : Colors.black54),
-              onTap: () => {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => Settings(),
-                  ),
+              leading: Icon(
+                appState.isDarkMode ? Icons.brightness_3 : Icons.brightness_7,
+                color: appState.isDarkMode ? Colors.white : Colors.black,
+              ),
+              title: Text(
+                "Modo Oscuro",
+                style: TextStyle(
+                  color: appState.isDarkMode ? Colors.white : Colors.black,
                 ),
-              },
+              ),
+              trailing: Switch(
+                value: appState.isDarkMode,
+                onChanged: (value) {
+                  appState.toggleDarkMode();
+                },
+              ),
             ),
             Divider(
                 color: appState.isDarkMode ? Colors.white24 : Colors.black12),
 
+            //Sección 3: Opciones
             // Botón cerrar sesión
             ListTile(
               leading: Icon(Icons.exit_to_app, color: Colors.red),
