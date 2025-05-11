@@ -183,6 +183,7 @@ class AppState with ChangeNotifier {
       return [];
     }
   }
+
  //Obtener habitos creados por el usuario
  Future<List> getUserCreatedHabits() async {
   if (_currentUser == null) {
@@ -216,8 +217,8 @@ class AppState with ChangeNotifier {
         .doc(_currentUser!.uid)
         .get();
 
-      if (userHabitDoc.exists && userHabitDoc.data() != null) {
-        Map<String, dynamic>? data = userHabitDoc.data() as Map<String, dynamic>?;
+    if (userHabitDoc.exists && userHabitDoc.data() != null) {
+      Map<String, dynamic>? data = userHabitDoc.data() as Map<String, dynamic>?;
 
       List<String> habits =
           (data?['created_habits'] as List<dynamic>?)?.cast<String>() ?? [];
@@ -226,7 +227,7 @@ class AppState with ChangeNotifier {
 
       _habitStatus = { for (var habit in tmpList) habit: false };
 
-        notifyListeners();
+      notifyListeners();
 
       return habits;
     } else {
@@ -237,84 +238,88 @@ class AppState with ChangeNotifier {
 
       return tmpList;
     }
+  } catch (e) {
+    print("Error obteniendo los habitos creados por el usuario: $e");
+    return [];
   }
+}
 
-  Future<void> addUserHabit(String habit) async {
-    if (_currentUser == null) return;
+Future<void> addUserHabit(String habit) async {
+  if (_currentUser == null) return;
 
-    final docRef = FirebaseFirestore.instance
-        .collection('userCreatedHabits')
-        .doc(_currentUser!.uid);
+  final docRef = FirebaseFirestore.instance
+      .collection('userCreatedHabits')
+      .doc(_currentUser!.uid);
 
-    try {
-      final doc = await docRef.get();
+  try {
+    final doc = await docRef.get();
 
-      if (doc.exists) {
-        List<dynamic> habits = doc.data()?['created_habits'] ?? [];
-        if (!habits.contains(habit)) {
-          habits.add(habit);
-          await docRef.update({'created_habits': habits});
-        }
-      } else {
-        await docRef.set({'userId ': _currentUser!.uid} as Map<String, dynamic>);
-        await docRef.update({'created_habits': [habit]});
-      }
-
-      _habitStatus[habit] = false;
-      notifyListeners();
-    } catch (e) {
-      print("Error adding habit: $e");
-    }
-  }
-
-  Future<void> updateUserHabit(String newHabitName, String oldHabitName) async{
-    if (_currentUser == null) return;
-
-    final docRef = FirebaseFirestore.instance
-        .collection('userCreatedHabits')
-        .doc(_currentUser!.uid);
-
-    try {
-      final doc = await docRef.get();
-
-      if (doc.exists) {
-        List<dynamic> habits = doc.data()?['created_habits'] ?? [];
-        for (int i =0; i < habits.length; i++){
-          if ( habits[i] == oldHabitName){
-            habits[i] = newHabitName;
-          }
-        }
+    if (doc.exists) {
+      List<dynamic> habits = doc.data()?['created_habits'] ?? [];
+      if (!habits.contains(habit)) {
+        habits.add(habit);
         await docRef.update({'created_habits': habits});
       }
-    }catch(e){
-      print("Error updating habit: $e");
+    } else {
+       await docRef.set({'userId ': _currentUser!.uid} as Map<String, dynamic>);
+      await docRef.update({'created_habits': [habit]});
     }
 
-
+    _habitStatus[habit] = false;
+    notifyListeners();
+  } catch (e) {
+    print("Error adding habit: $e");
   }
+}
 
-  Future<void> deleteUserHabit(String currentHabit) async{
-    if (_currentUser == null) return;
+Future<void> updateUserHabit(String newHabitName, String oldHabitName) async{
+  if (_currentUser == null) return;
 
-    final docRef = FirebaseFirestore.instance
-        .collection('userCreatedHabits')
-        .doc(_currentUser!.uid);
-    try {
-      final doc = await docRef.get();
+  final docRef = FirebaseFirestore.instance
+      .collection('userCreatedHabits')
+      .doc(_currentUser!.uid);
 
-      if (doc.exists) {
-        List<dynamic> habits = doc.data()?['created_habits'] ?? [];
-        for (int i =0; i < habits.length; i++){
-          if ( habits[i] == currentHabit){
-            habits.removeAt(i);
-          }
+  try {
+    final doc = await docRef.get();
+
+    if (doc.exists) {
+      List<dynamic> habits = doc.data()?['created_habits'] ?? [];
+      for (int i =0; i < habits.length; i++){
+        if ( habits[i] == oldHabitName){
+          habits[i] = newHabitName;
         }
-        await docRef.update({'created_habits': habits});
       }
-    }catch(e){
-      print("Error deleting habit: $e");
+      await docRef.update({'created_habits': habits});
     }
+  }catch(e){
+    print("Error updating habit: $e");
   }
+
+
+}
+
+Future<void> deleteUserHabit(String currentHabit) async{
+   if (_currentUser == null) return;
+
+  final docRef = FirebaseFirestore.instance
+      .collection('userCreatedHabits')
+      .doc(_currentUser!.uid);
+  try {
+    final doc = await docRef.get();
+
+    if (doc.exists) {
+      List<dynamic> habits = doc.data()?['created_habits'] ?? [];
+      for (int i =0; i < habits.length; i++){
+        if ( habits[i] == currentHabit){
+          habits.removeAt(i);
+        }
+      }
+      await docRef.update({'created_habits': habits});
+    }
+  }catch(e){
+    print("Error deleting habit: $e");
+  }
+}
 
 
 
@@ -350,7 +355,7 @@ class AppState with ChangeNotifier {
     }
   }
 
-  // Método para actualizar la imagen de perfil del usuario
+// Método para actualizar la imagen de perfil del usuario
   Future<void> updateProfileImage(String imageUrl) async {
     if (_currentUser == null || _userProfile == null) return;
 
