@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/nav_bar.dart';
@@ -7,8 +6,6 @@ import '../providers/app_state.dart';
 
 import 'package:habit_hub/screens/profile.dart';
 import 'package:habit_hub/screens/home.dart';
-import 'package:habit_hub/screens/community.dart';
-import 'package:habit_hub/screens/activity.dart';
 import 'package:habit_hub/screens/qr_scanner.dart';
 
 class ExploreScreen extends StatefulWidget {
@@ -63,29 +60,53 @@ class _ExploreScreenState extends State<ExploreScreen> {
           color: appState.isDarkMode ? Colors.white : Colors.black,
         ),
       ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () async {
-            final result = await Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => QrScanner()),
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white,
-            backgroundColor: Colors.blue.shade900,
-            padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-            textStyle: TextStyle(fontSize: 18),
+      body: Column(
+        children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton.icon(
+                onPressed: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const QrScanner()),
+                  );
+                },
+                icon: const Icon(Icons.camera_alt),
+                label: const Text("Escanear QR"),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.blue.shade900,
+                ),
+              ),
+            ),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.camera_alt, size: 24),
-              SizedBox(width: 8),
-              Text("Escanear QR"),
-            ],
+          Expanded(
+            child: Consumer<AppState>(
+              builder: (context, appState, _) {
+                final events = appState.eventos;
+
+                if (events.isEmpty) {
+                  return const Center(child: Text('No hay eventos agregados.'));
+                }
+
+                return ListView.builder(
+                  itemCount: events.length,
+                  itemBuilder: (context, index) {
+                    final e = events[index];
+                    return Card(
+                      child: ListTile(
+                        title: Text(e.summary),
+                        subtitle: Text('${e.location} - ${e.start.toLocal()}'),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
           ),
-        ),
+        ],
       ),
       bottomNavigationBar: BottomNavBar(
         selectedIndex: _selectedIndex,
