@@ -333,7 +333,7 @@ class _AllHabitsListState extends State<AllHabitsList> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          'Todos los Hábitos',
+          'Todos tus Hábitos',
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
@@ -395,7 +395,7 @@ class _AllHabitsListState extends State<AllHabitsList> {
                       icon: Icon(
                         Icons.edit,
                         color:
-                            appState.isDarkMode ? Colors.blue : Colors.black,
+                            appState.isDarkMode ? Colors.blue : Colors.blue,
                       ),
                     ),
                     //Icono de eliminar
@@ -406,7 +406,7 @@ class _AllHabitsListState extends State<AllHabitsList> {
                       icon: Icon(
                         Icons.delete,
                         color:
-                            appState.isDarkMode ? Colors.red : Colors.black,
+                            appState.isDarkMode ? Colors.red : Colors.red,
                       ),
                     ),
                   ],
