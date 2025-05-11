@@ -7,14 +7,14 @@ import '../services/firebase.dart';
 
 class AppState with ChangeNotifier {
   bool _isDarkMode = false;
-  Map<String, bool> _habitStatus = {
-    'Pasear al perro': false,
-    'Regar las plantas': false,
-    'Tender la cama': false,
-    'Ir al gym': false,
-    'Lectura diaria': false,
-  };
-
+  Map<String, bool> _habitStatus = {};
+ //   'Pasear al perro': false,
+ //   'Regar las plantas': false,
+ //   'Tender la cama': false,
+ //   'Ir al gym': false,
+ //   'Lectura diaria': false,
+ // };
+  int notEditableLength = 0;
   // Autenticación y Firestore
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirestoreService _firestoreService = FirestoreService();
@@ -183,37 +183,59 @@ class AppState with ChangeNotifier {
       return [];
     }
   }
+ //Obtener habitos creados por el usuario
+ Future<List> getUserCreatedHabits() async {
+  if (_currentUser == null) {
+    return [];
+  }
 
-  //Obtener habitos creados por el usuario
-  Future<List<String>> getUserCreatedHabits() async {
-    if (_currentUser == null) {
-      return [];
-    }
+  List<String> selectedHabits = await getUserHabits();
+  List<dynamic> selectedSports = [];
+  List<dynamic> selectedExercises = [];
 
-    try {
-      DocumentSnapshot userHabitDoc = await FirebaseFirestore.instance
-          .collection('userCreatedHabits')
-          .doc(_currentUser!.uid)
-          .get();
+  
+
+  DocumentSnapshot userDoc = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(_currentUser!.uid)
+      .get();
+
+  if (userDoc.exists && userDoc.data() != null) {
+    Map<String, dynamic>? data = userDoc.data() as Map<String, dynamic>?;
+    selectedSports = (data?['sports'] as List<dynamic>?)?.cast<String>() ?? [];
+    selectedExercises = (data?['excersice_types'] as List<dynamic>?)?.cast<String>() ?? [];
+  }
+
+  List<dynamic> tmpList = selectedHabits;
+  tmpList += selectedSports + selectedExercises;
+  final int defaultHabitsLength = tmpList.length;
+  notEditableLength = defaultHabitsLength;
+  try {
+    DocumentSnapshot userHabitDoc = await FirebaseFirestore.instance
+        .collection('userCreatedHabits')
+        .doc(_currentUser!.uid)
+        .get();
 
       if (userHabitDoc.exists && userHabitDoc.data() != null) {
         Map<String, dynamic>? data = userHabitDoc.data() as Map<String, dynamic>?;
 
-        final List<String> habits =
-            (data?['created_habits'] as List<dynamic>?)?.cast<String>() ?? [];
+      List<String> habits =
+          (data?['created_habits'] as List<dynamic>?)?.cast<String>() ?? [];
 
-        _habitStatus = { for (var habit in habits) habit: false };
+        tmpList += habits;
+
+      _habitStatus = { for (var habit in tmpList) habit: false };
 
         notifyListeners();
 
-        return habits;
-      } else {
-        print("No habit document exists for user.");
-        return [];
-      }
-    } catch (e) {
-      print("Error obteniendo los habitos creados por el usuario: $e");
-      return [];
+      return habits;
+    } else {
+      print("No habit document exists yet for user.");
+      
+      _habitStatus = { for (var habit in tmpList) habit: false };
+      notifyListeners();
+
+      return tmpList;
     }
   }
 
