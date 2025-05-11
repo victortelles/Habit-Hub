@@ -172,6 +172,12 @@ class _HabitsListState extends State<HabitsList> {
     final appState = Provider.of<AppState>(context);
     print("Build user: ${appState.currentUser}");
 
+    // Obtener el día actual
+    String today = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][DateTime.now().weekday % 7];
+
+    // Filtrar los hábitos por el día actual
+    List<Map<String, dynamic>> filteredHabits = _createdHabits.where((habit) => habit['days'].contains(today)).toList();
+
     // Actualización del diálogo de actualización de hábito
     void showUpdateDialog(
         BuildContext context, Map<String, dynamic> currentHabit) {
@@ -335,7 +341,7 @@ class _HabitsListState extends State<HabitsList> {
       body: RefreshIndicator(
         onRefresh: () => _loadUserCreatedHabits(appState),
         child: ListView(
-          children: _createdHabits.map((habit) {
+          children: filteredHabits.map((habit) {
             final habitTitle = habit['title'];
             final isSelected = appState.habitStatus[habitTitle] ?? false;
             return GestureDetector(
