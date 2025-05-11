@@ -50,7 +50,7 @@ class _SummaryState extends State<Summary> {
                           ? 'Ninguno seleccionado'
                           : widget.userPreferences.selectedHabits.join(', ')),
                   _buildPreferenceSection(
-                      'Deportes favoritos',
+                      'Deportes',
                       widget.userPreferences.selectedSports.isEmpty
                           ? 'Ninguno seleccionado'
                           : widget.userPreferences.selectedSports.join(', ')),
