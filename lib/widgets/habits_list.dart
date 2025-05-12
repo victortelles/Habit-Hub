@@ -140,6 +140,7 @@ class _HabitsListState extends State<HabitsList> {
                 ),
                 TextButton(
                   onPressed: () async {
+                     _loadUserCreatedHabits(appState);
                     if (newHabit.trim().isEmpty || selectedDays.isEmpty) return;
 
                     await appState.addUserHabit(newHabit.trim(), selectedDays);
@@ -365,78 +366,82 @@ class _HabitsListState extends State<HabitsList> {
       body: RefreshIndicator(
         onRefresh: () => _loadUserCreatedHabits(appState),
         child: ListView(
-          children: filteredHabits.map((habit) {
-            final habitTitle = habit['title'];
-            final isSelected = appState.habitStatus[habitTitle] ?? false;
-            return GestureDetector(
-              onTap: () {
-                appState.updateHabit(habitTitle, !isSelected);
-              },
-              child: Card(
-                color: appState.isDarkMode
-                    ? Colors.grey.shade800
-                    : Colors.grey.shade300,
-                child: ListTile(
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        habitTitle,
-                        style: TextStyle(
-                          color:
-                              appState.isDarkMode ? Colors.white : Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        habit['days']
-                            .map((day) => day.substring(0, 3))
-                            .join(', '),
-                        style: TextStyle(
-                          color: appState.isDarkMode
-                              ? Colors.white70
-                              : Colors.black54,
-                          fontSize: 10,
-                        ),
-                      ),
-                    ],
-                  ),
-                  leading: Icon(
-                    Icons.check_circle,
-                    color: isSelected ? Color(0xFF0046A1) : Colors.grey,
-                  ),
-                  trailing: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          showUpdateDialog(context, habit);
-                        },
-                        icon: Icon(
-                          Icons.edit,
-                          color:
-                              appState.isDarkMode ? Colors.blue : Colors.blue,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          showDeleteDialog(context, habitTitle);
-                        },
-                        icon: Icon(
-                          Icons.delete,
-                          color: appState.isDarkMode ? Colors.red : Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
+  children: filteredHabits.asMap().entries.map((entry) {
+    final index = entry.key;
+    final habit = entry.value;
+    final habitTitle = habit['title'];
+    final isSelected = appState.habitStatus[habitTitle] ?? false;
+
+    final isEditable = index >= appState.notEditableLength;
+
+    return GestureDetector(
+      onTap: () {
+        appState.updateHabit(habitTitle, !isSelected);
+      },
+      child: Card(
+        color: appState.isDarkMode
+            ? Colors.grey.shade800
+            : Colors.grey.shade300,
+        child: ListTile(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                habitTitle,
+                style: TextStyle(
+                  color: appState.isDarkMode ? Colors.white : Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                habit['days']
+                    .map((day) => day.substring(0, 3))
+                    .join(', '),
+                style: TextStyle(
+                  color: appState.isDarkMode
+                      ? Colors.white70
+                      : Colors.black54,
+                  fontSize: 10,
                 ),
               ),
-            );
-          }).toList(),
-        ),
+            ],
+          ),
+          leading: Icon(
+            Icons.check_circle,
+            color: isSelected ? Color(0xFF0046A1) : Colors.grey,
+          ),
+          trailing: isEditable
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        showUpdateDialog(context, habit);
+                      },
+                      icon: Icon(
+                        Icons.edit,
+                        color: appState.isDarkMode ? Colors.blue : Colors.blue,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        showDeleteDialog(context, habitTitle);
+                      },
+                      icon: Icon(
+                        Icons.delete,
+                        color: appState.isDarkMode ? Colors.red : Colors.red,
+                      ),
+                    ),
+                  ],
+                )
+              : null,
+              ),
+            ),
+          );
+        }).toList(),
+      ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddHabitDialog(context),

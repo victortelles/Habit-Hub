@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import '../models/user_preferences.dart';
 import '../models/user.dart';
 import '../services/firebase.dart';
@@ -72,8 +73,10 @@ class AppState with ChangeNotifier {
 
   // Método para actualizar el estado de un hábito
   void updateHabit(String habit, bool status) {
-    _habitStatus[habit] = status;
-    notifyListeners();
+    if (_habitStatus.containsKey(habit)) {
+      _habitStatus[habit] = status;
+      notifyListeners();
+    }
   }
 
   // Método para establecer el estado de carga
@@ -246,6 +249,26 @@ class AppState with ChangeNotifier {
       return [];
     }
 
+    List<String> selectedHabits = await getUserHabits();
+    List<dynamic> selectedSports = [];
+    List<dynamic> selectedExercises = [];
+
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(_currentUser!.uid)
+      .get();
+
+    if (userDoc.exists && userDoc.data() != null) {
+      Map<String, dynamic>? data = userDoc.data() as Map<String, dynamic>?;
+      selectedSports = (data?['sports'] as List<dynamic>?)?.cast<String>() ?? [];
+      selectedExercises = (data?['excersice_types'] as List<dynamic>?)?.cast<String>() ?? [];
+    }
+
+    List<dynamic> tmpList = selectedHabits;
+    tmpList += selectedSports + selectedExercises;
+    final int defaultHabitsLength = tmpList.length;
+    notEditableLength = defaultHabitsLength;
+
     try {
       DocumentSnapshot userHabitDoc = await FirebaseFirestore.instance
           .collection('userCreatedHabits')
@@ -268,15 +291,44 @@ class AppState with ChangeNotifier {
                   }
                 }).toList() ??
                 [];
+        //tmpList += habits;
 
-        _habitStatus = {for (var habit in habits) habit['title']: false};
-
+        
+        _habitStatus = {
+          for (var title in [
+            ...tmpList,
+            ...habits.map((h) => h['title'] as String)
+          ])
+            title: false
+        }; 
+        print(tmpList);
         notifyListeners();
-
-        return habits;
+        final String currentDay = DateFormat('EEEE').format(DateTime.now()); 
+        final List<Map<String, dynamic>> defaultHabitsWithCurrentDay =
+          tmpList.map((title) => {
+            'title': title,
+            'days': [currentDay],
+          }).toList();
+        return [
+          ...defaultHabitsWithCurrentDay,
+          ...habits
+        ];
       } else {
         print("No habit document exists for user.");
-        return [];
+        _habitStatus = {
+          for (var habit in tmpList) habit: false
+        };
+        notifyListeners();
+        print(tmpList);
+
+        final String currentDay = DateFormat('EEEE').format(DateTime.now());
+        final List<Map<String, dynamic>> defaultHabitsWithCurrentDay =
+            tmpList.map((title) => {
+              'title': title,
+              'days': [currentDay],
+            }).toList();
+
+        return defaultHabitsWithCurrentDay;
       }
     } catch (e) {
       print("Error obteniendo los hábitos creados por el usuario: $e");

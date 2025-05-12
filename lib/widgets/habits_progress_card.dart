@@ -11,7 +11,7 @@ class HabitsProgressCard extends StatelessWidget {
   Widget build(BuildContext context) {
     int completedHabits =
         appState.habitStatus.values.where((status) => status).length;
-    int totalHabits = appState.habitStatus.length;
+   final  int totalHabits = appState.habitStatus.length;
     double progress = totalHabits > 0 ? completedHabits / totalHabits : 0;
     Color cardColor = progress == 1.0 ? Colors.green : Colors.blue.shade900;
 
